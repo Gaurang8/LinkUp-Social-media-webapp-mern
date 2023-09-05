@@ -1,0 +1,205 @@
+.rating-container {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
+
+.salon-rating-heading {
+    font-size: 28px;
+    font-weight: 600;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+}
+
+.salon-rating-heading .salon-name {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 40px;
+    color: #000;
+    flex-shrink: 1;
+}
+
+.salon-rating-btn {
+    width: 130px;
+    height: 40px;
+}
+
+.salon-rating-btn button {
+    width: 100%;
+    height: 35px;
+    padding: 0 15px;
+    border: none;
+    outline: none;
+    margin: 0;
+    background: #512DC8;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.rating-container .salon-address {
+    width: 80%;
+    font-size: 16px;
+    color: #000;
+    font-weight: 300;
+}
+
+.overall-salon-rating {
+    width: 80%;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.overall-salon-rating .rating-number {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+}
+
+.overall-salon-rating .rating-star {
+    min-width: 100px;
+    /* height: 20px; */
+}
+
+.overall-salon-rating .total-review {
+    font-size: 16px;
+    font-weight: 300;
+    color: #000;
+}
+
+.salon-rating-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.salon-rating-list-item {
+    width: 100%;
+    padding: 10px 10px 20px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.rating-user-info {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    /* align-items: center; */
+}
+
+.rating-user-info .user-avter {
+    width: 70px;
+    height: 70px;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.rating-user-info .user-name-n-rate {
+    width: 100%;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rating-user-info .username {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 32px;
+}
+
+.rating-user-info .user-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* justify-content: center; */
+}
+
+.user-rating-disc {
+    padding-left: 10px;
+}
+
+
+.rating-modal-heading{
+    margin: 0;
+    padding: 0 10px 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.rating-container-model{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.rating-container-model .user-information{
+    display: flex;
+    align-items: center;
+}
+.rating-container-model .user-rating{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rating-container-model .user-rating-disc textarea{
+    width: 100%;
+    resize: none;
+    height: 100px;
+    border-radius: 6px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.rating-container-model .user-rating-disc span{
+    padding-left: 15px;
+    font-weight: 300;
+}
+.user-submit-rating-btn{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+.user-submit-rating-btn button:first-child{
+
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 150px;
+    height: 35px;
+    text-align: center;
+}
+.user-submit-rating-btn button:last-child{
+    background-color: #512DC8;
+    border: none;
+    border-radius: 5px;
+    width: 150px;
+    text-align: center;
+    color: #fff;
+    height: 35px;
+}
+
+.model-box{
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+}
+@media screen and (max-width:768px) {
+    .rating-container .salon-address{
+        width: 100%;
+    }
+    .salon-rating-btn button{
+        padding: 0 5px;
+    }
+}
