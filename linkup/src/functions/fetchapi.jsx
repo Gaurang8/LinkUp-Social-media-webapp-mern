@@ -34,6 +34,7 @@ const authUser = async () => {
       if (response.ok) {
         console.log("logout successfully");
         // window.location.reload()
+        authUser()
 
       } else {
         console.error("Logout failed");
