@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { MyContext } from "../MyContext";
-import logo from "../logo.png";
+import logo from "../pagelogo.png";
 import "./CSS/user.css";
 
 
@@ -86,7 +86,7 @@ function User() {
         isLogin ? (
           <div className="container">
             <div className="left">
-               <img src={logo} alt="logo" />
+               <img src={logo} alt="logo" style={{filter:"drop-shadow(1px 2px 6px white)"}}/>
             </div>
             <div className="right">
               <h2>
@@ -122,7 +122,7 @@ function User() {
         ) : (
           <div className="container">
             <div className="left">
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo" style={{filter:"drop-shadow(1px 2px 6px white)"}} />
             </div>
             <div className="right">
               <h2>
