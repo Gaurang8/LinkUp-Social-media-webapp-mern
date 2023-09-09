@@ -21,8 +21,14 @@ function App() {
       console.log(userData);
       if (userData) {
         setUser(userData);
-        setIsAuth(userData);
+        setIsAuth(true);
         
+        console.log("user is", userData);
+        console.log("isAuth is", isAuth);
+      }
+      else{
+        setUser(null);
+        setIsAuth(false);
         console.log("user is", userData);
         console.log("isAuth is", isAuth);
       }
