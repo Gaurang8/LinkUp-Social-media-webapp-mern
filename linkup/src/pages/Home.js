@@ -10,7 +10,6 @@ const Home = () => {
         <button onClick={() => {
         handleLogout()
         authUser()
-        window.location.reload()
         }}>Logout</button>
     </div>
   )
