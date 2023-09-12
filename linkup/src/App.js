@@ -9,10 +9,11 @@ import { MyContext } from "./MyContext";
 import { authUser } from "./functions/fetchapi.jsx";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Profile from './pages/Profile';
 
 function App() {
 
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(true);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ function App() {
             {
               isAuth ? (
                 <Routes>
-                <Route path='/' element={<Home />
+                <Route path='/' element={<Profile />
                 }>
                 </Route>
           </Routes>
