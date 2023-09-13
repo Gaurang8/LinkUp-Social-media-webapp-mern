@@ -78,7 +78,7 @@ const Profile = () => {
               </table>
             </div>
           </div>
-          {Array(10)
+          {Array(50)
             .fill()
             .map((_, i) => (
               <div className="post">
