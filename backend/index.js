@@ -9,6 +9,13 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const http = require("http");
+const socketIo = require("socket.io");
+
+const server = http.createServer(app);
+const io = socketIo(server);
+
+
 dotenv.config();
 app.use(express.json());
 app.use((req, res, next) => {
@@ -87,6 +94,7 @@ app.post("/register", async (req, res) => {
       followers: [],
       socialMediaLinks: [],
       posts: [],
+      notifications: [],
       joinedDate: new Date()
     });
 
@@ -177,6 +185,32 @@ app.post("/follow/:userId", authenticateToken, async (req, res) => {
     userToFollow.followers.push(req.user.user_id);
     await userToFollow.save();
 
+
+    // only for notifications
+    const notificationMessage = `${currentUser.name} is now started following you.`;
+    const recipientUserId = userId;
+
+    const recipient = await User.findById(recipientUserId);
+    if (recipient) {
+      const notification = {
+        message: notificationMessage,
+        senderId: currentUser._id.toString(),
+        senderName: currentUser.name,
+        recipient: recipientUserId, 
+        timestamp: new Date(),
+      };
+      recipient.notifications.push(notification);
+      await recipient.save();
+
+      io.to(recipientUserId).emit("sendNotification", {
+        notification
+      });
+    }
+
+    
+
+    // notification ends here
+
     res.status(200).json({ message: "You are now following this user" });
   } catch (err) {
     console.error(err);
@@ -220,7 +254,7 @@ app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
 app.post("/addnewpost", authenticateToken, async (req, res) => {
   try {
     const { text, images } = req.body;
-    const userId = req.user.user_id; 
+    const userId = req.user.user_id;
 
     const user = await User.findById(userId);
 
@@ -230,7 +264,7 @@ app.post("/addnewpost", authenticateToken, async (req, res) => {
 
     const newPost = {
       userId: userId,
-      name: user.name, 
+      name: user.name,
       text: text,
       images: images || [],
       likes: [],

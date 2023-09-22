@@ -23,26 +23,6 @@ const postSchema = mongoose.Schema({
             },
         },
     ],
-    notifications: [
-        {
-            message: {
-                type: String,
-                required: true,
-            },
-            sender: {
-                type: String,
-                required: true,
-            },
-            recipient: {
-                type: String,
-                required: true,
-            },
-            timestamp: {
-                type: Date,
-                default: Date.now,
-            },
-        },
-    ],
     createdTime: {
         type: Date,
         default: Date.now,
@@ -92,6 +72,30 @@ const userSchema = mongoose.Schema({
             default: ''
         }
     }],
+    notifications: [
+        {
+            message: {
+                type: String,
+                required: true,
+            },
+            senderId: {
+                type: String,
+                required: true,
+            },
+            senderName: {
+                type: String,
+                required: true,
+            },
+            recipient: {
+                type: String,
+                required: true,
+            },
+            timestamp: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
     posts: [postSchema],
     joinedDate: {
         type: Date,
