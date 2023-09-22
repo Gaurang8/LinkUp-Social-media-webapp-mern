@@ -9,6 +9,12 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import InterpreterModeOutlinedIcon from '@mui/icons-material/InterpreterModeOutlined';
+import CameraAltOutlined from '@mui/icons-material/CameraAltOutlined';
+import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
+import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
+import Avatar from '@mui/material/Avatar';
+import { deepOrange } from '@mui/material/colors';
+import Post from "../components/Post";
 
 const Profile = () => {
   return (
@@ -57,33 +63,55 @@ const Profile = () => {
                 Hi,i'm Gaurang Khambhaliya
               </span>
               <span className="p-edit-btn">
-                  Edit Your Profile
+                Edit Your Profile
               </span>
             </div>
             <div className="p-p-disc"> this is disc de erc dfefc dfefc efecdj fdhf dfdsufdhf fdfuh f fhifhaid ffd dfsdf dfdf fggjdighe fadhu aigt fdugfaifggtihd ugfad dfdfd fd fdf fejf ef </div>
             <div className="p-p-more-details">
               <table>
                 <tr>
-                  <td><HomeOutlinedIcon/> Lives In</td>
+                  <td><HomeOutlinedIcon /> Lives In</td>
                   <td>Ahmedabad , Gujrat</td>
                 </tr>
                 <tr>
-                  <td><PersonOutlineOutlinedIcon/> Account</td>
+                  <td><PersonOutlineOutlinedIcon /> Account</td>
                   <td>Verified Member</td>
                 </tr>
                 <tr>
-                  <td><InterpreterModeOutlinedIcon/> Speak</td>
+                  <td><InterpreterModeOutlinedIcon /> Speak</td>
                   <td>Gujrati , Hindi</td>
                 </tr>
               </table>
             </div>
           </div>
-          {Array(50)
+
+          <div className="add-post-from-profile-page">
+            <div className="post-content">
+              <div className="add-post-user-avtar">
+                <Avatar
+                  sx={{ bgcolor: deepOrange[500] }}
+                  alt="Gaurang"
+                  src="/broken-image.jpg"
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </div>
+              <div className="add-post-text">
+                <input type="text" placeholder="What's on your mind?" />
+              </div>
+            </div>
+            <div className="post-add-content-btn">
+              <span><CameraAltOutlined /></span>
+              <span><VideoCallOutlinedIcon /></span>
+              <span><GifBoxOutlinedIcon /></span>
+            </div>
+          </div>
+
+
+
+          {Array(5)
             .fill()
             .map((_, i) => (
-              <div className="post">
-                lorem21dadasds sdsdsdsdsdsd sdsdsdsdsdsd
-              </div>
+             <Post/>
             ))}
         </div>
       </div>

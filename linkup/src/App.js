@@ -13,7 +13,7 @@ import Profile from './pages/Profile';
 
 function App() {
 
-  const [isAuth, setIsAuth] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState(null);
 
   useEffect(() => {

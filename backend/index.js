@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
   }
 });
 
-const url = `${process.env.MONGODB_URI}Users?retryWrites=true&w=majority`;
+const url = `${process.env.MONGODB_URI}Linkup?retryWrites=true&w=majority`;
 
 mongoose
   .connect(url)
@@ -62,27 +62,30 @@ app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     console.log(req.body);
-
     if (!(email && password && name)) {
-      res.status(400).send("All input is required");
+      return res.status(400).send("All input is required");
     }
 
     const oldUser = await User.findOne({ email });
 
     if (oldUser) {
-      return res.status(409).send("User Already Exist , login to continue");
+      return res.status(409).send("User Already Exists, login to continue");
     }
 
-    encryptedPassword = await bcrypt.hash(password, 10);
+    const encryptedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
       name,
       email,
       password: encryptedPassword,
-    });
-
-    await newUser.save().then(() => {
-      console.log("user save");
+      description: '',
+      location: '',
+      accountType: 'non-verified',
+      languageSpeak: [], 
+      following: [], 
+      followers: [], 
+      socialMediaLinks: [], 
+      joinedDate: new Date() 
     });
 
     const token = jwt.sign(
@@ -99,11 +102,13 @@ app.post("/register", async (req, res) => {
 
     newUser.token = token;
     console.log(newUser);
-    res.status(201).json({ user: newUser, message: "register successfully" });
+    res.status(201).json({ user: newUser, message: "Registered successfully" });
   } catch (err) {
     console.log(err);
+    res.status(500).send("An error occurred while registering");
   }
 });
+
 
 app.post("/login", async (req, res) => {
   try {
