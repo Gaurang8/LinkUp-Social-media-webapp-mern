@@ -101,7 +101,6 @@ app.post("/register", async (req, res) => {
 
     res.cookie("token", token, { expires: expirationDate, sameSite: "None", secure: true });
 
-    newUser.token = token;
     console.log(newUser);
     res.status(201).json({ user: newUser, message: "Registered successfully" });
   } catch (err) {
@@ -150,5 +149,72 @@ app.get("/auth", authenticateToken, async (req, res) => {
   const user = await User.findOne({ email: req.user.email });
   res.status(201).json({ user });
 });
+
+
+app.post("/follow/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const userToFollow = await User.findById(userId);
+    if (!userToFollow) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // const currentUser = await User.findById(req.user._id);
+    const currentUser = "650d98c5bd0f214a09ef8955";
+    if (!currentUser) {
+      return res.status(404).json({ message: "Current user not found" });
+    }
+
+    if (currentUser.following.includes(userId)) {
+      return res.status(400).json({ message: "You are already following this user" });
+    }
+
+    currentUser.following.push(userId);
+    await currentUser.save();
+
+    userToFollow.followers.push(req.user._id);
+    await userToFollow.save();
+
+    res.status(200).json({ message: "You are now following this user" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while following the user" });
+  }
+});
+
+
+
+app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const userToUnfollow = await User.findById(userId);
+    if (!userToUnfollow) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const currentUser = await User.findById(req.user._id);
+    if (!currentUser) {
+      return res.status(404).json({ message: "Current user not found" });
+    }
+
+    if (!currentUser.following.includes(userId)) {
+      return res.status(400).json({ message: "You are not following this user" });
+    }
+
+    currentUser.following = currentUser.following.filter(id => id.toString() !== userId.toString());
+    await currentUser.save();
+
+    userToUnfollow.followers = userToUnfollow.followers.filter(id => id.toString() !== req.user._id.toString());
+    await userToUnfollow.save();
+
+    res.status(200).json({ message: "You have unfollowed this user" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while unfollowing the user" });
+  }
+});
+
+
+
 
 app.listen(8000);
