@@ -22,7 +22,7 @@ const Profile = () => {
 
   const handleFollow = async (followId) => {
       
-       const res = await fetch(`http://localhost:8000/follow/${followId}`, {
+       const res = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/follow/${followId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
