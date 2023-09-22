@@ -30,11 +30,12 @@ app.get("/", (req, res) => {
   }
 });
 
-const url = `${process.env.MONGODB_URI}Linkup?retryWrites=true&w=majority`;
+const url = `${process.env.MONGODB_URI}Users?retryWrites=true&w=majority`;
 
 mongoose
   .connect(url)
   .then(() => {
+    
     console.log("connected to database successfully");
   })
   .catch((error) => {
