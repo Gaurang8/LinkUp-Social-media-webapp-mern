@@ -16,12 +16,13 @@ import Avatar from '@mui/material/Avatar';
 import { deepOrange } from '@mui/material/colors';
 import Post from "../components/Post";
 import { handleAddPost, handleCommentPost, handleDeleteComment, handleDeletePost, handleDislikePost, handleLikePost, handleLogout } from "../functions/fetchapi";
+import Notifications from "../components/Notifications";
 
 const Profile = () => {
 
   const handleFollow = async (followId) => {
       
-       const res = await fetch(`http://localhost:8000/unfollow/${followId}`, {
+       const res = await fetch(`http://localhost:8000/follow/${followId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,8 +54,8 @@ const Profile = () => {
               <span>999 Followings</span>
             </div>
             <div className="p-c-message-more">
-              <span className="p-c-msg" onClick={()=>{handleFollow("650daeb1b51238cfb14dac35")}}>Message</span>
-              <span className="p-c-share" onClick={()=>{handleDeletePost("650dc89c2cfc378dad99b098")}}>
+              <span className="p-c-msg" onClick={()=>{handleFollow("650df53181248aaf72e9c35f")}}>Message</span>
+              <span className="p-c-share" onClick={()=>{handleDeletePost("650df54a81248aaf72e9c362")}}>
                 <IosShareIcon />
               </span>
               <span className="p-c-more" onClick={()=>{handleLogout()}}>
@@ -63,12 +64,12 @@ const Profile = () => {
             </div>
             <div className="p-c-links" >
               <TwitterIcon onClick={()=> {handleAddPost("lorem dfd fhed fdfeuf efefe" , "https://picsum.photos/50/50")}}/>
-              <FacebookIcon onClick={()=>{ handleLikePost("650dc82d2cfc378dad99b089") } }/>
-              <InstagramIcon onClick={()=>{ handleCommentPost("650dc82d2cfc378dad99b089","Gaurang is a good boy") }} />
+              <FacebookIcon onClick={()=>{ handleLikePost("650df54a81248aaf72e9c362") } }/>
+              <InstagramIcon onClick={()=>{ handleCommentPost("650df54a81248aaf72e9c362","Gaurang is a good boy") }} />
             </div>
             <div className="p-c-created-date-and-report">
-              <span onClick={()=> {handleDislikePost("650dc82d2cfc378dad99b089")}}>Joined Since Nov 2017 </span>
-              <span onClick={() => {handleDeleteComment("650dc82d2cfc378dad99b089","650dce93a956ff9fcc32b14c")}}>Report This User</span>
+              <span onClick={()=> {handleDislikePost("650df54a81248aaf72e9c362")}}>Joined Since Nov 2017 </span>
+              <span onClick={() => {handleDeleteComment("650df54a81248aaf72e9c362","650dce93a956ff9fcc32b14c")}}>Report This User</span>
             </div>
           </div>
         </div>
@@ -101,6 +102,7 @@ const Profile = () => {
             </div>
           </div>
 
+          <Notifications/>
           <div className="add-post-from-profile-page">
             <div className="post-content">
               <div className="add-post-user-avtar">
