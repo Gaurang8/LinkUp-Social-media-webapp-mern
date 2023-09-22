@@ -15,8 +15,24 @@ import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
 import Avatar from '@mui/material/Avatar';
 import { deepOrange } from '@mui/material/colors';
 import Post from "../components/Post";
+import { handleAddPost, handleCommentPost, handleDeleteComment, handleDeletePost, handleDislikePost, handleLikePost, handleLogout } from "../functions/fetchapi";
 
 const Profile = () => {
+
+  const handleFollow = async (followId) => {
+      
+       const res = await fetch(`http://localhost:8000/unfollow/${followId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      });
+      const data = await res.json();
+      console.log(data);
+      
+  }
+
   return (
     <div className="main-profile-container">
       <div className="profile-theme-page">
@@ -37,22 +53,22 @@ const Profile = () => {
               <span>999 Followings</span>
             </div>
             <div className="p-c-message-more">
-              <span className="p-c-msg">Message</span>
-              <span className="p-c-share">
+              <span className="p-c-msg" onClick={()=>{handleFollow("650daeb1b51238cfb14dac35")}}>Message</span>
+              <span className="p-c-share" onClick={()=>{handleDeletePost("650dc89c2cfc378dad99b098")}}>
                 <IosShareIcon />
               </span>
-              <span className="p-c-more">
+              <span className="p-c-more" onClick={()=>{handleLogout()}}>
                 <MoreVertIcon />
               </span>
             </div>
-            <div className="p-c-links">
-              <TwitterIcon />
-              <FacebookIcon />
-              <InstagramIcon />
+            <div className="p-c-links" >
+              <TwitterIcon onClick={()=> {handleAddPost("lorem dfd fhed fdfeuf efefe" , "https://picsum.photos/50/50")}}/>
+              <FacebookIcon onClick={()=>{ handleLikePost("650dc82d2cfc378dad99b089") } }/>
+              <InstagramIcon onClick={()=>{ handleCommentPost("650dc82d2cfc378dad99b089","Gaurang is a good boy") }} />
             </div>
             <div className="p-c-created-date-and-report">
-              <span>Joined Since Nov 2017 </span>
-              <span>Report This User</span>
+              <span onClick={()=> {handleDislikePost("650dc82d2cfc378dad99b089")}}>Joined Since Nov 2017 </span>
+              <span onClick={() => {handleDeleteComment("650dc82d2cfc378dad99b089","650dce93a956ff9fcc32b14c")}}>Report This User</span>
             </div>
           </div>
         </div>

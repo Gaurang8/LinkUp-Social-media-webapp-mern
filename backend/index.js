@@ -35,7 +35,7 @@ const url = `${process.env.MONGODB_URI}Users?retryWrites=true&w=majority`;
 mongoose
   .connect(url)
   .then(() => {
-    
+
     console.log("connected to database successfully");
   })
   .catch((error) => {
@@ -82,11 +82,12 @@ app.post("/register", async (req, res) => {
       description: '',
       location: '',
       accountType: 'non-verified',
-      languageSpeak: [], 
-      following: [], 
-      followers: [], 
-      socialMediaLinks: [], 
-      joinedDate: new Date() 
+      languageSpeak: [],
+      following: [],
+      followers: [],
+      socialMediaLinks: [],
+      posts: [],
+      joinedDate: new Date()
     });
 
     const token = jwt.sign(
@@ -151,7 +152,7 @@ app.get("/auth", authenticateToken, async (req, res) => {
 });
 
 
-app.post("/follow/:userId", async (req, res) => {
+app.post("/follow/:userId", authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
     const userToFollow = await User.findById(userId);
@@ -159,8 +160,9 @@ app.post("/follow/:userId", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // const currentUser = await User.findById(req.user._id);
-    const currentUser = "650d98c5bd0f214a09ef8955";
+    console.log(req.user);
+    const currentUser = await User.findById(req.user.user_id);
+    console.log(currentUser)
     if (!currentUser) {
       return res.status(404).json({ message: "Current user not found" });
     }
@@ -172,7 +174,7 @@ app.post("/follow/:userId", async (req, res) => {
     currentUser.following.push(userId);
     await currentUser.save();
 
-    userToFollow.followers.push(req.user._id);
+    userToFollow.followers.push(req.user.user_id);
     await userToFollow.save();
 
     res.status(200).json({ message: "You are now following this user" });
@@ -183,7 +185,6 @@ app.post("/follow/:userId", async (req, res) => {
 });
 
 
-
 app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
@@ -192,7 +193,7 @@ app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const currentUser = await User.findById(req.user._id);
+    const currentUser = await User.findById(req.user.user_id);
     if (!currentUser) {
       return res.status(404).json({ message: "Current user not found" });
     }
@@ -201,10 +202,12 @@ app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
       return res.status(400).json({ message: "You are not following this user" });
     }
 
-    currentUser.following = currentUser.following.filter(id => id.toString() !== userId.toString());
+    console.log(currentUser.following[0])
+    console.log(userId)
+    currentUser.following = currentUser.following.filter(id => id !== userId);
     await currentUser.save();
 
-    userToUnfollow.followers = userToUnfollow.followers.filter(id => id.toString() !== req.user._id.toString());
+    userToUnfollow.followers = userToUnfollow.followers.filter(id => id !== req.user.user_id);
     await userToUnfollow.save();
 
     res.status(200).json({ message: "You have unfollowed this user" });
@@ -213,6 +216,212 @@ app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
     res.status(500).json({ message: "An error occurred while unfollowing the user" });
   }
 });
+
+app.post("/addnewpost", authenticateToken, async (req, res) => {
+  try {
+    const { text, images } = req.body;
+    const userId = req.user.user_id; 
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newPost = {
+      userId: userId,
+      name: user.name, 
+      text: text,
+      images: images || [],
+      likes: [],
+      comments: [],
+    };
+
+    user.posts.push(newPost);
+    await user.save();
+
+    res.status(201).json({ message: "Post created successfully", post: newPost });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while creating the post" });
+  }
+});
+
+app.delete("/deletepost/:postId", authenticateToken, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user.user_id;
+
+    const postUser = await User.findOne({ 'posts._id': postId });
+
+    if (!postUser) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const post = postUser.posts.find((p) => p._id.toString() === postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    console.log(post.userId)
+    console.log(userId)
+    if (post.userId.toString() !== userId) {
+      return res.status(403).json({ message: "You are not authorized to delete this post" });
+    }
+
+    await User.updateOne({ 'posts._id': postId }, { $pull: { posts: { _id: postId } } });
+
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while deleting the post" });
+  }
+});
+
+
+app.patch("/likepost/:postId", authenticateToken, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user.user_id;
+
+    const postUser = await User.findOne({ 'posts._id': postId });
+
+    if (!postUser) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const post = postUser.posts.find((p) => p._id.toString() === postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.likes.includes(userId)) {
+      return res.status(400).json({ message: "You have already liked this post" });
+    }
+
+    post.likes.push(userId);
+    await postUser.save();
+
+    res.status(200).json({ message: "You have liked the post" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while liking the post" });
+  }
+});
+
+app.patch("/dislikepost/:postId", authenticateToken, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user.user_id;
+
+    const postUser = await User.findOne({ 'posts._id': postId });
+
+    if (!postUser) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const post = postUser.posts.find((p) => p._id.toString() === postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (!post.likes.includes(userId)) {
+      return res.status(400).json({ message: "You have not liked this post" });
+    }
+
+    post.likes = post.likes.filter((id) => id !== userId);
+    await postUser.save();
+
+    res.status(200).json({ message: "You have disliked the post" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while disliking the post" });
+  }
+});
+
+
+app.patch("/commentpost/:postId", authenticateToken, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { comment } = req.body;
+    const userId = req.user.user_id;
+
+    const postUser = await User.findOne({ 'posts._id': postId });
+
+    if (!postUser) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const post = postUser.posts.find((p) => p._id.toString() === postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newComment = {
+      userId: userId,
+      name: user.name,
+      comment: comment,
+      currentTime: new Date(),
+    };
+
+    post.comments.push(newComment);
+    await postUser.save();
+
+    res.status(200).json({ message: "Comment added successfully", comment: newComment });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while adding the comment" });
+  }
+});
+
+app.delete("/deletecomment/:postId/:commentId", authenticateToken, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const userId = req.user.user_id;
+
+    const postUser = await User.findOne({ 'posts._id': postId });
+
+    if (!postUser) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const post = postUser.posts.find((p) => p._id.toString() === postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const comment = post.comments.find((c) => c._id.toString() === commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    if (comment.userId !== userId) {
+      return res.status(403).json({ message: "You are not authorized to delete this comment" });
+    }
+
+    post.comments = post.comments.filter((c) => c._id.toString() !== commentId);
+    await postUser.save();
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while deleting the comment" });
+  }
+});
+
+
 
 
 

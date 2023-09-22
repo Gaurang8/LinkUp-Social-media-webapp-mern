@@ -1,24 +1,54 @@
 const mongoose = require('mongoose');
 
+const postSchema = mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
+    name: {
+        type: String,
+    },
+    text: {
+        type: String,
+    },
+    images: [String],
+    likes: [String],
+    comments: [
+        {
+            comment: String,
+            userId: String,
+            currentTime: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
+    notifications: [
+        {
+            message: {
+                type: String,
+                required: true,
+            },
+            sender: {
+                type: String,
+                required: true,
+            },
+            recipient: {
+                type: String,
+                required: true,
+            },
+            timestamp: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
+    createdTime: {
+        type: Date,
+        default: Date.now,
+    },
+});
 
-// const userSchema = mongoose.Schema({
-//     name:{
-//         type:String,
-//         require: true
-//     },
-//     email:{
-//         type:String,
-//         require: true,
-//         unique: true
-//     },
-//     password:{
-//         type:String,
-//         require:true
-//     },
-//     token:{
-//         type:String
-//     }
-// },{timestamps:true});
 
 const userSchema = mongoose.Schema({
     name: {
@@ -36,11 +66,11 @@ const userSchema = mongoose.Schema({
     },
     description: {
         type: String,
-        default: ''
+        default: 'this is description , you can edit it from profile page'
     },
     location: {
         type: String,
-        default: ''
+        default: 'India'
     },
     accountType: {
         type: String,
@@ -50,14 +80,8 @@ const userSchema = mongoose.Schema({
     languageSpeak: [{
         type: String
     }],
-    following: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    followers: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
+    following: [String],
+    followers: [String],
     socialMediaLinks: [{
         platform: {
             type: String,
@@ -68,6 +92,7 @@ const userSchema = mongoose.Schema({
             default: ''
         }
     }],
+    posts: [postSchema],
     joinedDate: {
         type: Date,
         default: Date.now
