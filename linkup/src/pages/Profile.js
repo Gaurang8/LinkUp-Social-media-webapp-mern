@@ -54,7 +54,7 @@ const Profile = () => {
               <span>999 Followings</span>
             </div>
             <div className="p-c-message-more">
-              <span className="p-c-msg" onClick={()=>{handleFollow("650df53181248aaf72e9c35f")}}>Message</span>
+              <span className="p-c-msg" onClick={()=>{handleFollow("650ea2ec0c7c27710f098821")}}>Message</span>
               <span className="p-c-share" onClick={()=>{handleDeletePost("650df54a81248aaf72e9c362")}}>
                 <IosShareIcon />
               </span>

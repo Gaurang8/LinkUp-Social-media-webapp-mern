@@ -12,15 +12,12 @@ const cors = require("cors");
 const http = require("http");
 const socketIo = require("socket.io");
 
-const server = http.createServer(app);
-const io = socketIo(server);
-
-
 dotenv.config();
 app.use(express.json());
+app.use(cors({ origin: process.env.BASE_ADDR, credentials: true }));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", process.env.BASE_ADDR);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE ,PATCH");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
   next();
@@ -28,6 +25,28 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
+  }
+});
+
+app.listen(8000);
+
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+
+});
 
 app.get("/", (req, res) => {
   if (mongoose.connection.readyState === 1) {
@@ -186,6 +205,7 @@ app.post("/follow/:userId", authenticateToken, async (req, res) => {
     await userToFollow.save();
 
 
+
     // only for notifications
     const notificationMessage = `${currentUser.name} is now started following you.`;
     const recipientUserId = userId;
@@ -196,18 +216,22 @@ app.post("/follow/:userId", authenticateToken, async (req, res) => {
         message: notificationMessage,
         senderId: currentUser._id.toString(),
         senderName: currentUser.name,
-        recipient: recipientUserId, 
+        recipient: recipientUserId,
         timestamp: new Date(),
       };
       recipient.notifications.push(notification);
       await recipient.save();
+
+
+      console.log("recipientUserId", recipientUserId);
+
 
       io.to(recipientUserId).emit("sendNotification", {
         notification
       });
     }
 
-    
+
 
     // notification ends here
 
@@ -455,9 +479,291 @@ app.delete("/deletecomment/:postId/:commentId", authenticateToken, async (req, r
   }
 });
 
+app.get("/searchuser/:query", async (req, res) => {
+  try {
+    const { query } = req.params;
+
+    const users = await User.find({ name: { $regex: new RegExp(query, "i") } });
+
+    res.status(200).json({ users });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while searching for users" });
+  }
+});
+
+app.patch("/update/:userId", authenticateToken, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { name, description, location, languageSpeak, socialMediaLinks } = req.body;
+
+    if (req.user.user_id !== userId) {
+      return res.status(403).json({ message: "You are not authorized to update this user's profile" });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (name) { 
+      user.name = name; 
+    }
+    if (description) user.description = description;
+    if (location) user.location = location;
+    if (languageSpeak) user.languageSpeak = languageSpeak;
+    if (socialMediaLinks) user.socialMediaLinks = socialMediaLinks;
+
+    await user.save();
+
+    res.status(200).json({ message: "User profile updated successfully", user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while updating the user profile" });
+  }
+});
+
+app.patch("/updateaccounttype/:userId", authenticateToken, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { accountType } = req.body;
+
+    if (req.user.user_id !== userId) {
+      return res.status(403).json({ message: "You are not authorized to update this user's account type" });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (accountType) user.accountType = accountType;
+
+    await user.save();
+
+    res.status(200).json({ message: "User account type updated successfully", user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while updating the user account type" });
+  }
+});
 
 
+app.patch("/changeuseremail/:userId", authenticateToken, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { newEmail, currentPassword } = req.body;
 
+    if (req.user.user_id !== userId) {
+      return res.status(403).json({ message: "You are not authorized to change this user's email" });
+    }
 
+    const user = await User.findById(userId);
 
-app.listen(8000);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Incorrect password. Email change failed" });
+    }
+
+    user.email = newEmail;
+
+    await user.save();
+
+    res.status(200).json({ message: "Email changed successfully", user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while changing the email" });
+  }
+});
+
+app.patch("/changeuserpassword/:userId", authenticateToken, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { currentPassword, newPassword } = req.body;
+
+    if (req.user.user_id !== userId) {
+      return res.status(403).json({ message: "You are not authorized to change this user's password" });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Incorrect current password. Password change failed" });
+    }
+
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+    user.password = newPasswordHash;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "An error occurred while changing the password" });
+  }
+});
+
+app.get("/newsfeed/:offset/:limit", async (req, res) => {
+  try {
+ 
+    const userId = req.userId; 
+
+    const offset = parseInt(req.params.offset) || 0;
+    const limit = parseInt(req.params.limit) || 15; 
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const posts = await User.find({ _id: { $in: user.following } })
+      .select("posts") 
+      .sort({ "posts.createdTime": -1 }) 
+
+    const newsFeed = posts.flatMap((u) => u.posts);
+
+    const limitedNewsFeed = newsFeed.slice(offset, offset + limit);
+
+    res.json({ newsFeed : limitedNewsFeed });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching the news feed" });
+  }
+});
+app.get("/popularposts", async (req, res) => {
+  try {
+    const timeFrameInDays = 7;
+    const postLimit = 15; 
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - timeFrameInDays);
+
+    const popularPosts = await User.aggregate([
+      {
+        $unwind: "$posts",
+      },
+      {
+        $match: {
+          "posts.createdTime": { $gte: startDate },
+        },
+      },
+      {
+        $sort: { "posts.likes.length": -1 },
+      },
+      {
+        $limit: postLimit, 
+      },
+      {
+        $group: {
+          _id: null,
+          posts: { $push: "$posts" },
+        },
+      },
+    ]);
+
+    if (popularPosts.length === 0) {
+      return res.json({ popularPosts: [] });
+    }
+
+    const trendingPosts = popularPosts.map((doc) => doc.posts).flat(); 
+    res.json({ popularPosts: trendingPosts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching popular posts" });
+  }
+});
+
+app.get("/postlikes/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await User.findOne({ 'posts._id': postId });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const likedUserIds = post.posts.find((p) => p._id.toString() === postId).likes;
+
+    const likedUsers = await User.find(
+      { _id: { $in: likedUserIds } },
+      { name: 1, image: 1, description: 1 } 
+    );
+
+    res.json({ likedUsers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching post likes" });
+  }
+});
+
+app.get("/postcomments/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await User.findOne({ 'posts._id': postId });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const comments = post.posts.find((p) => p._id.toString() === postId).comments;
+
+    const commentUserIds = comments.map((comment) => comment.userId);
+
+    const commentUsers = await User.find(
+      { _id: { $in: commentUserIds } },
+      { name: 1, image: 1, description: 1 }
+      )
+
+    const formattedComments = comments.map((comment) => {
+      const commentUser = commentUsers.find((user) => user._id.toString() === comment.userId);
+      return {
+        commentData: comment,
+        userData: commentUser,
+      };
+    });
+
+    res.json({ comments: formattedComments });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching post comments" });
+  }
+});
+
+app.get("/suggestedusers", authenticateToken ,async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const suggestedUsers = await User.find({
+      _id: { $ne: userId },
+      _id: { $nin: user.following },
+    }).limit(10);
+
+    res.json({ suggestedUsers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching suggested users" });
+  }
+});
