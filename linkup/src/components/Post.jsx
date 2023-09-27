@@ -6,8 +6,16 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import TollRoundedIcon from "@mui/icons-material/TollRounded";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import { MyContext } from "../MyContext";
+const moment = require('moment');
 
-const Post = () => {
+const Post = ({Data}) => {
+
+  const {  user } = React.useContext(MyContext);
+
+
+  console.log(Data)
+
   return (
     <div className="post-card-container">
       <div className="post-header">
@@ -21,8 +29,8 @@ const Post = () => {
             />
           </div>
           <div className="post-header-left-name-time">
-            <div className="post-header-left-username">Gaurang Khambhaliya</div>
-            <div className="post-header-left-date">Aug 10 at 8:10pm</div>
+            <div className="post-header-left-username">{Data?.name || user?.name}</div>
+            <div className="post-header-left-date">{moment(Data.createdTime).format("MMM D [at] h:mma") || Data&& Data?.createdTime }</div>
           </div>
         </div>
         <div className="post-header-right">
@@ -32,15 +40,13 @@ const Post = () => {
         </div>
       </div>
       <div className="post-body">
-        <div className="post-body-text-content">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore at
-          qui ut fuga possimus dolorum. Aliquam, ducimus? Quam officiis omnis
-          amet eveniet culpa. <br /> Lorem ipsum dolor sit, amet consectetur
-          adipisicing elit. Minima quibusdam enim officiis officia non!
-        </div>
+        <div className="post-body-text-content">{Data?.text}</div>
         <div className="post-body-image">
-         <img src="https://picsum.photos/200/300" alt="post-img" />
-          <img src="https://picsum.photos/20/20" alt="post-img" />
+          {/* <img src="https://picsum.photos/200/300" alt="post-img" /> */}
+          {Data.images &&
+            Data.images.map((img) => {
+              return <img src={img} alt="post-img" />;
+            })}
         </div>
       </div>
       <div className="post-footer">
@@ -49,20 +55,20 @@ const Post = () => {
             <span className="icon">
               <FavoriteRoundedIcon style={{ color: "red" }} />
             </span>
-            <span className="count">14 like</span>
+            <span className="count">{Data?.likes?.length} likes</span>
           </div>
           <div className="footer-comment">
             <span className="icon">
               <TollRoundedIcon />
             </span>
-            <span className="count">25 comment</span>
+            <span className="count">{Data?.comments?.length} comments</span>
           </div>
         </div>
         <div className="footer-share">
           <span className="icon">
             <ShareOutlinedIcon />
           </span>
-            <span className="count">Share</span>
+          <span className="count">Share</span>
         </div>
       </div>
     </div>

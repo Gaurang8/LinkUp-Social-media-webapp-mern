@@ -70,6 +70,7 @@ mongoose
 
 const authenticateToken = (req, res, next) => {
   const token = req.cookies.token;
+  console.log("token is", token);
 
   if (token === null) {
     return res.status(401).json({ message: "Missing token" });
@@ -87,7 +88,7 @@ const authenticateToken = (req, res, next) => {
 
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password , description , location , accountType , languageSpeak , posts } = req.body;
     console.log(req.body);
     if (!(email && password && name)) {
       return res.status(400).send("All input is required");
@@ -105,14 +106,14 @@ app.post("/register", async (req, res) => {
       name,
       email,
       password: encryptedPassword,
-      description: '',
-      location: '',
-      accountType: 'non-verified',
-      languageSpeak: [],
+      description: description || '',
+      location: location || '',
+      accountType: accountType || 'non-verified',
+      languageSpeak: languageSpeak || [],
       following: [],
       followers: [],
       socialMediaLinks: [],
-      posts: [],
+      posts: posts || [],
       notifications: [],
       joinedDate: new Date()
     });
@@ -617,23 +618,27 @@ app.patch("/changeuserpassword/:userId", authenticateToken, async (req, res) => 
   }
 });
 
-app.get("/newsfeed/:offset/:limit", async (req, res) => {
+app.get("/newsfeed/:offset/:limit",authenticateToken, async (req, res) => {
   try {
  
-    const userId = req.userId; 
+    const userId = req.user.user_id; 
 
     const offset = parseInt(req.params.offset) || 0;
     const limit = parseInt(req.params.limit) || 15; 
 
     const user = await User.findById(userId);
+    console.log(user)
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const posts = await User.find({ _id: { $in: user.following } })
+    console.log(user.following)
+    const posts = await User.find({ _id : { $in: user.following } })
       .select("posts") 
-      .sort({ "posts.createdTime": -1 }) 
+      .sort({ "posts.createdTime": -1 })
+
+    console.log(posts)
 
     const newsFeed = posts.flatMap((u) => u.posts);
 

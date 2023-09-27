@@ -17,8 +17,12 @@ import { deepOrange } from '@mui/material/colors';
 import Post from "../components/Post";
 import { handleAddPost, handleCommentPost, handleDeleteComment, handleDeletePost, handleDislikePost, handleLikePost, handleLogout } from "../functions/fetchapi";
 import Notifications from "../components/Notifications";
+import { MyContext } from "../MyContext";
 
 const Profile = () => {
+
+  const { isAuth , user } = React.useContext(MyContext);
+
 
   const handleFollow = async (followId) => {
       
@@ -48,13 +52,13 @@ const Profile = () => {
             <div className="p-c-avtar">
               <img></img>
             </div>
-            <div className="p-c-name">Gaurang Khambhaliya</div>
+            <div className="p-c-name">{user?.name}</div>
             <div className="p-c-followers">
-              <span>999 followers</span>
-              <span>999 Followings</span>
+              <span>{user?.followers?.length} followers</span>
+              <span>{user?.following?.length} Followings</span>
             </div>
             <div className="p-c-message-more">
-              <span className="p-c-msg" onClick={()=>{handleFollow("650ea2ec0c7c27710f098821")}}>Message</span>
+              <span className="p-c-msg" onClick={()=>{handleFollow("6512c191e3a8664dbefa5318")}}>Message</span>
               <span className="p-c-share" onClick={()=>{handleDeletePost("650df54a81248aaf72e9c362")}}>
                 <IosShareIcon />
               </span>
@@ -126,11 +130,11 @@ const Profile = () => {
 
 
 
-          {Array(5)
-            .fill()
-            .map((_, i) => (
-             <Post/>
-            ))}
+          {
+             user && user?.posts.map((post)=>{
+              return <Post key={post._id} Data={post} />
+
+          })}
         </div>
       </div>
     </div>

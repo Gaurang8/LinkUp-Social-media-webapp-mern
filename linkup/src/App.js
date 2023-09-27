@@ -10,6 +10,7 @@ import { authUser } from "./functions/fetchapi.jsx";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Profile from './pages/Profile';
+import News from './pages/News';
 
 function App() {
 
@@ -54,8 +55,8 @@ function App() {
             {
               isAuth ? (
                 <Routes>
-                <Route path='/' element={<Profile />
-                }>
+                <Route path='/news' element={<News/>}/>
+                <Route path='/' element={<Profile />}>
                 </Route>
           </Routes>
 
