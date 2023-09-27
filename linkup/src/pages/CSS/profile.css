@@ -258,7 +258,7 @@ svg {
     color: #000;
 }
 
-@media screen and (max-width:978px) {
+/* @media screen and (max-width:978px) {
 
     .profile-theme-page {
         height: 200px;
@@ -281,10 +281,10 @@ svg {
     .profile-page-content .right {
         width: calc(100% - 250px);
     }
-}
+} */
 
 
-@media screen and (max-width:768px) {
+@media screen and (max-width:1100px) {
     .profile-page-content {
         flex-direction: column;
         align-items: center;
@@ -299,9 +299,8 @@ svg {
 
     .profile-page-content .right {
         width: 100%;
-        padding-block: 0;
-        transform: translateY(-30px);
-        border-radius: unset;
+        padding: 10px;
+        transform: translateY(-90px);
     }
 
     .profile-cover span {

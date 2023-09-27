@@ -2,6 +2,15 @@ import React from 'react'
 import Post from '../components/Post'
 import { MyContext } from '../MyContext'
 
+// 
+import CameraAltOutlined from '@mui/icons-material/CameraAltOutlined';
+import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
+import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
+import Avatar from '@mui/material/Avatar';
+import { deepOrange } from '@mui/material/colors';
+import AddPostImg from '../components/AddPostImg';
+import PostAddCard from '../components/PostAddCard';
+
 const News = () => {
     
     const { user } = React.useContext(MyContext);
@@ -34,6 +43,7 @@ const News = () => {
     
     return (
         <>
+          <PostAddCard/>
             {
             user && posts.map((post) => {
                 return <Post key={post._id} Data={post} />

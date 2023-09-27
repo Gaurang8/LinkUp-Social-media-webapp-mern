@@ -106,7 +106,6 @@ const Profile = () => {
             </div>
           </div>
 
-          <Notifications/>
           <div className="add-post-from-profile-page">
             <div className="post-content">
               <div className="add-post-user-avtar">

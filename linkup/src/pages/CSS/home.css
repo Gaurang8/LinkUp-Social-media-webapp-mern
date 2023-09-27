@@ -1,0 +1,33 @@
+.homepage-container {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 80px);
+    gap: 15px;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: transparent;
+
+}
+
+.homepage-news {
+    width: calc(100% - 300px);
+    height: 100%;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    margin: 10px 0 0;
+    display: flex;
+    flex-shrink: 1;
+    flex-grow: 1;
+    flex-direction: column;
+    gap: 10px;
+    overflow: scroll;
+}
+
+.homepage-aside {
+    width: 300px;
+    height: 100%;
+    overflow: scroll;
+    height: fit-content;
+}

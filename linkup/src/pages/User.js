@@ -86,10 +86,10 @@ function User() {
         isLogin ? (
           <div className="container">
             <div className="left">
-               <img src={logo} alt="logo" style={{filter:"drop-shadow(1px 2px 6px white)"}}/>
+              <img src={logo} alt="logo" style={{ filter: "drop-shadow(1px 2px 6px white)" }} />
             </div>
             <div className="right">
-              <h2>
+              {/* <h2>
                 Login To Explore <br /> LinkUp
               </h2>
               <div className="form">
@@ -116,16 +116,51 @@ function User() {
                   </p>
                 </form>
 
+              </div> */}
+              <div class="form-container">
+                <div class="logo-container">
+                  Login To Explore <br /> LinkUp
+                </div>
+
+                <form class="form" onSubmit={handleSubmitLogin}>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Password</label>
+                    <input
+
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <button class="form-submit-btn" type="submit" > Login </button>
+                </form>
+
+                <p class="signup-link">
+                  Don't have an account?
+                  <span onClick={() => setIsLogin(false)} class="signup-link link">Register</span>
+                </p>
               </div>
             </div>
           </div>
         ) : (
           <div className="container">
             <div className="left">
-              <img src={logo} alt="logo" style={{filter:"drop-shadow(1px 2px 6px white)"}} />
+              <img src={logo} alt="logo" style={{ filter: "drop-shadow(1px 2px 6px white)" }} />
             </div>
             <div className="right">
-              <h2>
+              {/* <h2>
                 Register To Explore <br /> LinkUp
               </h2>
               <div className="form">
@@ -160,6 +195,52 @@ function User() {
                   </p>
                 </form>
 
+              </div> */}
+              <div class="form-container">
+                <div class="logo-container">
+                Register To Explore <br /> LinkUp
+                </div>
+
+                <form class="form" onSubmit={handleSubmitReg}>
+                  <div class="form-group">
+                    <label for="email">Name</label>
+                    <input
+
+                      type="text"
+                      placeholder="Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Password</label>
+                    <input
+
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <button class="form-submit-btn" type="submit" > Register </button>
+                </form>
+
+                <p class="signup-link">
+                Already have an account?
+                  <span onClick={() => setIsLogin(true)} class="signup-link link">Login</span>
+                </p>
               </div>
             </div>
           </div>
