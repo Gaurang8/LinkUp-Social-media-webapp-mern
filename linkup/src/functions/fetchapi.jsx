@@ -45,7 +45,10 @@ const authUser = async () => {
   };
 
   const handleAddPost = async (text,images) => {
-  
+    
+    console.log("adding post");
+    console.log(text);
+    console.log(images);
     try{
       const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/addnewpost`, {
         method: "POST",
@@ -77,7 +80,7 @@ const authUser = async () => {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/deletepost/${postId}`, {
         method: "DELETE",
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
         },
         credentials: "include",
       });
@@ -200,6 +203,27 @@ const authUser = async () => {
     
   }
 
+  const handleFollow = async (followId) => {
+    console.log(followId)
+    try{  
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/follow/${followId}`, {
+     method: "POST",
+     headers: {
+       "Content-Type": "application/json",
+     },
+     credentials: "include"
+   }).then((res) => res.json()).then((data) => {
+     console.log(data)
+     authUser()
+   })
 
+    }
+    catch(error){
+      console.log("Error while following user", error);
+    }
 
-  export { authUser , handleLogout ,handleAddPost , handleDeletePost , handleLikePost , handleDislikePost, handleCommentPost , handleDeleteComment};
+   
+}
+  
+
+  export { authUser , handleLogout ,handleAddPost , handleDeletePost , handleLikePost , handleDislikePost, handleCommentPost , handleDeleteComment , handleFollow};

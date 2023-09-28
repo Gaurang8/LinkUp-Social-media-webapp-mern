@@ -5,6 +5,7 @@ import { MyContext } from '../MyContext';
 import Sidebar from '../components/Sidebar';
 import './CSS/home.css';
 import News from './News';
+import SuggestedUser from '../components/SuggestedUser';
 
 
 const Home = () => {
@@ -14,7 +15,7 @@ const Home = () => {
   return (
     <div className="homepage-container">
       <div className='homepage-news'><News/></div>
-      <div className='homepage-aside'><Sidebar/></div>
+      <div className='homepage-aside'><SuggestedUser/></div>
     </div>
   )
 }

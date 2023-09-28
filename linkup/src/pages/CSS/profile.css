@@ -1,8 +1,8 @@
 .main-profile-container {
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 80px);
     padding: 15px;
-    overflow: hidden;
+    overflow: scroll;
 
     box-sizing: border-box;
 }
@@ -44,7 +44,7 @@
     max-width: 100%;
     display: flex;
     justify-content: space-between;
-    height: calc(100vh - 250px);
+    /* height: calc(100vh - 250px); */
     box-sizing: border-box;
     padding: 20px 40px;
     gap: 20px;
@@ -54,6 +54,8 @@
     width: 300px;
     height: calc(100% - 130px);
     transform: translateY(-130px);
+    position: sticky;
+    top: 130px;
 }
 
 .profile-left-card {
@@ -116,11 +118,10 @@ svg {
 }
 
 .profile-page-content .right {
-    width: calc(100% - 360px);
+    width: calc(100% - 330px);
     flex-shrink: 1;
     height: 100%;
     overflow-y: scroll;
-    background-color: #fff;
     border-radius: 15px;
     padding-block: 20px;
 }
@@ -170,11 +171,17 @@ svg {
     font-weight: 700;
     border-radius: 15px;
 }
-
+.p-p-disc-section{
+    background-color: #fff;
+    width: calc(100% - 20px);
+    margin: auto;
+    border-radius: 10px;
+}
 .p-p-disc {
     padding: 10px 20px;
     font-size: 14px;
     line-height: 24px;
+
 }
 
 ::-webkit-scrollbar {
@@ -296,7 +303,10 @@ svg {
     .main-profile-container {
         overflow: auto;
     }
-
+    .profile-page-content .left{
+        position: static;
+        top: auto;
+    }
     .profile-page-content .right {
         width: 100%;
         padding: 10px;

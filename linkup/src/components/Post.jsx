@@ -45,7 +45,7 @@ const Post = ({Data}) => {
           {/* <img src="https://picsum.photos/200/300" alt="post-img" /> */}
           {Data.images &&
             Data.images.map((img) => {
-              return <img src={img} alt="post-img" />;
+              return <img src={`data:image/*;base64,${img}`} alt="post-img" />
             })}
         </div>
       </div>

@@ -1,0 +1,128 @@
+.suggested-user{
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    background-color: #fff;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+.suggested-u-header{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+}
+.suggested-u-header h2{
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+.suggested-u-header p{
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #737373;
+    margin: 0;
+}
+.suggested-u-body{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+.suggested-u-body-items{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+.suggested-u-body-items-img{
+    height: 40px;
+    width: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    box-sizing: border-box;
+    border: 2px solid #5D3FD3;
+    padding: 2px;
+}
+.suggested-u-body-items-img img{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.suggested-u-body-items-name{
+    width: 150px;
+    flex-shrink: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    /* gap: 5px; */
+}
+.suggested-u-body-items-name h3{
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0;
+}
+.suggested-u-body-items-name p{
+    font-size: 0.8rem;
+    font-weight: 500;
+    color:#737373;
+    margin: 0;
+}
+.suggested-u-body-items-btn{
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+    border: 1px solid #5D3FD3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.suggested-u-body-items-btn button{
+    height: 100%;
+    width: 100%;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background-color: #5D3FD3;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.suggested-u-footer{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+.suggested-u-footer p{
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #a088ff;
+}
+.suggested-u-footer button{
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-weight: 700;
+
+}

@@ -22,8 +22,8 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
 
@@ -184,6 +184,8 @@ app.post("/follow/:userId", authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
     const userToFollow = await User.findById(userId);
+    console.log(userId)
+    
     if (!userToFollow) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -279,6 +281,8 @@ app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
 app.post("/addnewpost", authenticateToken, async (req, res) => {
   try {
     const { text, images } = req.body;
+    console.log(req.body)
+
     const userId = req.user.user_id;
 
     const user = await User.findById(userId);

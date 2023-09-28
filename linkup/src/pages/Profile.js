@@ -24,19 +24,7 @@ const Profile = () => {
   const { isAuth , user } = React.useContext(MyContext);
 
 
-  const handleFollow = async (followId) => {
-      
-       const res = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/follow/${followId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include"
-      });
-      const data = await res.json();
-      console.log(data);
-      
-  }
+  
 
   return (
     <div className="main-profile-container">
@@ -58,7 +46,7 @@ const Profile = () => {
               <span>{user?.following?.length} Followings</span>
             </div>
             <div className="p-c-message-more">
-              <span className="p-c-msg" onClick={()=>{handleFollow("6512c191e3a8664dbefa5318")}}>Message</span>
+              <span className="p-c-msg" >Message</span>
               <span className="p-c-share" onClick={()=>{handleDeletePost("650df54a81248aaf72e9c362")}}>
                 <IosShareIcon />
               </span>
@@ -141,3 +129,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
+

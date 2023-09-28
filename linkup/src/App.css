@@ -17,7 +17,7 @@
 
 }
 .main-c-left.isFullclass{
-    width: 300px !important;
+    width: 250px !important;
     flex-grow: 0;
     flex-shrink: 0;
 }

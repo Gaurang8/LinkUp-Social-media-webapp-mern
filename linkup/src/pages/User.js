@@ -149,7 +149,7 @@ function User() {
 
                 <p class="signup-link">
                   Don't have an account?
-                  <span onClick={() => setIsLogin(false)} class="signup-link link">Register</span>
+                  <span onClick={() => setIsLogin(false)} class="signup-link link"> Register</span>
                 </p>
               </div>
             </div>
@@ -239,7 +239,7 @@ function User() {
 
                 <p class="signup-link">
                 Already have an account?
-                  <span onClick={() => setIsLogin(true)} class="signup-link link">Login</span>
+                  <span onClick={() => setIsLogin(true)} class="signup-link link"> Login</span>
                 </p>
               </div>
             </div>
