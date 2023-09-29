@@ -281,6 +281,51 @@ app.post("/unfollow/:userId", authenticateToken, async (req, res) => {
   }
 });
 
+app.post("/addcoverimg", authenticateToken, async (req, res) => {
+  try {
+    const { images } = req.body;
+    const userId = req.user.user_id;
+    console.log(images[0])
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+
+    user.coverImage = images[0]
+    await user.save();
+
+    res.status(201).json({ message: "Cover image added successfully" });
+  } catch (err) {
+    console.error("Error while adding cover image", err);
+    res.status(500).json({ message: "An error occurred while adding the cover image" });
+  }
+});
+app.post("/addprofileimg", authenticateToken, async (req, res) => {
+  try {
+    const { images } = req.body;
+    const userId = req.user.user_id;
+    console.log(images[0])
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+
+    user.profileImage = images[0]
+    await user.save();
+
+    res.status(201).json({ message: "profile image added successfully" });
+  } catch (err) {
+    console.error("Error while adding profile image", err);
+    res.status(500).json({ message: "An error occurred while adding the profile image" });
+  }
+});
+
 app.post("/addnewpost", authenticateToken, async (req, res) => {
   try {
     const { text, images } = req.body;
@@ -663,27 +708,25 @@ app.patch("/changeuserpassword/:userId", authenticateToken, async (req, res) => 
 
 app.get("/newsfeed/:offset/:limit", authenticateToken, async (req, res) => {
   try {
-
     const userId = req.user.user_id;
-
     const offset = parseInt(req.params.offset) || 0;
     const limit = parseInt(req.params.limit) || 15;
 
     const user = await User.findById(userId);
-    console.log(user)
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log(user.following)
-    const posts = await User.find({ _id: { $in: user.following } })
+    const userPosts = user.posts || [];
+
+    const followingPosts = await User.find({ _id: { $in: user.following } })
       .select("posts")
-      .sort({ "posts.createdTime": -1 })
+      .sort({ "posts.createdTime": -1 });
 
-    console.log(posts)
+    const newsFeed = userPosts.concat(followingPosts.flatMap((u) => u.posts));
 
-    const newsFeed = posts.flatMap((u) => u.posts);
+    newsFeed.sort((a, b) => b.createdTime - a.createdTime);
 
     const limitedNewsFeed = newsFeed.slice(offset, offset + limit);
 
@@ -693,6 +736,7 @@ app.get("/newsfeed/:offset/:limit", authenticateToken, async (req, res) => {
     res.status(500).json({ error: "An error occurred while fetching the news feed" });
   }
 });
+
 app.get("/popularposts", async (req, res) => {
   try {
     const timeFrameInDays = 7;
@@ -750,7 +794,7 @@ app.get("/postlikes/:postId", async (req, res) => {
 
     const likedUsers = await User.find(
       { _id: { $in: likedUserIds } },
-      { name: 1, image: 1, description: 1 }
+      { name: 1, image: 1, username: 1  }
     );
 
     res.json({ likedUsers });
