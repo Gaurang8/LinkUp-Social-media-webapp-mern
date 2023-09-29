@@ -230,7 +230,7 @@ const Profile = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-         <CommonForm/>
+         <CommonForm close={handleClose}/>
         </Box>
       </Modal>
       <Modal

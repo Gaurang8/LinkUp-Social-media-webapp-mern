@@ -2,7 +2,7 @@ import React, { useState , useEffect ,useContext } from "react";
 import "../../pages/CSS/user.css";
 import { MyContext } from "../../MyContext";
 
-const CommonForm = () => {
+const CommonForm = ({close}) => {
   const { user } = useContext(MyContext);
 
   const [name, setName] = useState("");
@@ -50,6 +50,7 @@ const CommonForm = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("User profile updated successfully:", data);
+        
       } else {
         console.error("Failed to update user profile");
       }

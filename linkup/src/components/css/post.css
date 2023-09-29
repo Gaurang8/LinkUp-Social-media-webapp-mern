@@ -112,7 +112,7 @@
     object-fit: cover;
     border-radius: 10px;
     flex-grow: 1;
-    max-width: 300px;
+    max-width: min(300px , 100%);
 }
 .post-footer{
     width: 100%;
