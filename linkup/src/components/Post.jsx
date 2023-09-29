@@ -8,32 +8,100 @@ import TollRoundedIcon from "@mui/icons-material/TollRounded";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { MyContext } from "../MyContext";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
-import { authUser, handleCommentPost, handleDislikePost, handleLikePost } from "../functions/fetchapi";
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import {
+  authUser,
+  handleCommentPost,
+  handleDislikePost,
+  handleLikePost,
+} from "../functions/fetchapi";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import { Link } from "react-router-dom";
 
 const moment = require("moment");
 
 const Post = ({ Data }) => {
-  const { user , setUser } = useContext(MyContext);
+  const { user, setUser } = useContext(MyContext);
 
   const [postComment, setPostComment] = useState("");
-  const [isPostLiked,setIsPostLiked] = useState(false);
+  const [isPostLiked, setIsPostLiked] = useState(false);
+  const [showComment, setShowComment] = useState(false);
+  const [viewMoreComment, setViewMoreComment] = useState(false);
+
+  const [postCommentedUserDetails, setPostCommentedUserDetails] =
+    useState(null);
+  const [postLikedUserDetails, setPostLikedUserDetails] = useState(null);
 
   const handlePostCommentSubmit = async (postId) => {
     if (postComment.trim(" ").length > 0) {
       const data = await handleCommentPost(postId, postComment);
-      const newUser = authUser();
-      setUser(newUser);
+      // const newUser = authUser();
+      // setUser(newUser);
+      setPostComment("");
     }
   };
 
-  useEffect (()=>{
-    setIsPostLiked(Data?.likes?.includes(user?._id));
-  } 
-  ,[Data,user])
+  useEffect(() => {
+    postLikedUserDetails?.some((like) => like._id === user?._id)
+      ? setIsPostLiked(true)
+      : setIsPostLiked(false);
+  }, [Data, user, postLikedUserDetails, postCommentedUserDetails]);
 
   console.log(Data);
+
+  const fetchPostLikeUser = async (postId) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_ADDR}/postlikes/${postId}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setPostLikedUserDetails(data.likedUsers);
+        console.log("postliked user", postLikedUserDetails);
+      } else {
+        console.log("postliked user fetch failed");
+      }
+    } catch (error) {
+      console.log("error while fetching postliked user", error);
+    }
+  };
+
+  const fetchPostCommentUser = async (postId) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_ADDR}/postcomments/${postId}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setPostCommentedUserDetails(data.comments);
+        console.log("postcommented user", postCommentedUserDetails);
+      } else {
+        console.log("postcommented user fetch failed");
+      }
+    } catch (error) {
+      console.log("error while fetching postcommented user", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPostCommentUser(Data?._id);
+    fetchPostLikeUser(Data?._id);
+  }, [Data, isPostLiked, user]);
 
   return (
     <div className="post-card-container">
@@ -76,27 +144,41 @@ const Post = ({ Data }) => {
       <div className="post-footer">
         <div className="footer-like-comment">
           <div className="footer-like">
-            {
-              isPostLiked ? <span className="icon"
-              onClick={()=>{
-                handleDislikePost(Data?._id);
-                setIsPostLiked(false);
-              }} >
-              <FavoriteRoundedIcon style={{ color: "red" }} />
-            </span> : <span className="icon" onClick={()=>{
-              handleLikePost(Data?._id);
-              setIsPostLiked(true);
-            }}>
-              <FavoriteBorderOutlinedIcon />
-            </span>
-            }
-            <span className="count">{Data?.likes?.length} likes</span>
+            {isPostLiked ? (
+              <span
+                className="icon"
+                onClick={async () => {
+                  await handleDislikePost(Data?._id);
+                  setIsPostLiked(false);
+                  await fetchPostLikeUser(Data?._id);
+                }}
+              >
+                <FavoriteRoundedIcon style={{ color: "red" }} />
+              </span>
+            ) : (
+              <span
+                className="icon"
+                onClick={async () => {
+                  await handleLikePost(Data?._id);
+                  setIsPostLiked(true);
+                  await fetchPostLikeUser(Data?._id);
+                }}
+              >
+                <FavoriteBorderOutlinedIcon />
+              </span>
+            )}
+            <span className="count">{postLikedUserDetails?.length} likes</span>
           </div>
-          <div className="footer-comment">
+          <div
+            className="footer-comment"
+            onClick={() => setShowComment(!showComment)}
+          >
             <span className="icon">
               <TollRoundedIcon />
             </span>
-            <span className="count">{Data?.comments?.length} comments</span>
+            <span className="count">
+              {postCommentedUserDetails?.length} comments
+            </span>
           </div>
         </div>
         <div className="footer-share">
@@ -111,16 +193,73 @@ const Post = ({ Data }) => {
           <Avatar />
         </div>
         <div className="post-comment-section">
-          <input type="text" value={postComment} placeholder="Write a comment..."  onChange={(e)=> setPostComment(e.target.value)}/>
+          <input
+            type="text"
+            value={postComment}
+            placeholder="Write a comment..."
+            onChange={(e) => setPostComment(e.target.value)}
+          />
           <button
-            onClick={() => {
-              handlePostCommentSubmit(Data?._id);
+            onClick={async () => {
+              await handlePostCommentSubmit(Data?._id);
+              await fetchPostCommentUser(Data?._id);
             }}
           >
             <SendOutlinedIcon />
           </button>
         </div>
       </div>
+      {showComment && (
+        <div className="post-user-comments-list">
+          {!viewMoreComment
+            ? postCommentedUserDetails?.slice(0, 2).map((comment) => {
+                return (
+                  <>
+                    <div className="post-user-comments-list-item">
+                      <span>
+                        <img src="https://picsum.photos/30/30" alt="" />
+                      </span>
+                      <div className="post-user-comments-list-item-text">
+                        <span>{comment?.userData?.name} </span>
+                         {comment?.commentData?.comment}
+                      </div>
+                    </div>
+                  </>
+                );
+              })
+            : postCommentedUserDetails?.map((comment) => {
+                return (
+                  <>
+                    <div className="post-user-comments-list-item">
+                      <span>
+                        <img src="https://picsum.photos/30/30" alt="" />
+                      </span>
+                      <div className="post-user-comments-list-item-text">
+                        <span>{comment?.userData?.name} </span>
+                         {comment?.commentData?.comment}
+                      </div>
+                    </div>
+                  </>
+                );
+              })}
+          {postCommentedUserDetails?.length > 2 &&
+            (viewMoreComment ? (
+              <span
+                className="view-more-btn-comment"
+                onClick={() => setViewMoreComment(false)}
+              >
+                view less
+              </span>
+            ) : (
+              <span
+                className="view-more-btn-comment"
+                onClick={() => setViewMoreComment(true)}
+              >
+                view more
+              </span>
+            ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -77,6 +77,7 @@ const handleAddPost = async (text, images) => {
   }
 };
 
+
 const handleDeletePost = async (postId) => {
   try {
     const response = await fetch(
@@ -241,7 +242,60 @@ const handleUnfollow = async (userId) => {
     console.log("Error while unfollowing user", error);
   }
 
+
 }
+
+const addCoverImg = async ( images) => {
+  console.log(images);
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_ADDR}/addcoverimg`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ images }),
+      }
+    );
+
+    if (response.ok) {
+      console.log("post added successfully");
+      authUser();
+    } else {
+      console.error("post failed");
+    }
+  } catch (error) {
+    console.log("Error while adding post", error);
+  }
+};
+const addProfileImg = async ( images) => {
+  console.log(images);
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_ADDR}/addprofileimg`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ images }),
+      }
+    );
+
+    if (response.ok) {
+      console.log("post added successfully");
+      authUser();
+    } else {
+      console.error("post failed");
+    }
+  } catch (error) {
+    console.log("Error while adding post", error);
+  }
+};
+
 
 export {
   authUser,
@@ -253,5 +307,7 @@ export {
   handleCommentPost,
   handleDeleteComment,
   handleFollow,
-  handleUnfollow
+  handleUnfollow,
+  addCoverImg,
+  addProfileImg
 };

@@ -9,6 +9,7 @@ import GifOutlinedIcon from '@mui/icons-material/GifOutlined';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import AddPostImg from "./AddPostImg";
+import { handleAddPost } from "../functions/fetchapi";
 
 const style = {
     position: 'absolute',
@@ -24,6 +25,20 @@ const PostAddCard = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [text, setText] = useState("");
+
+  const handleSubmit = async () => {
+  
+    try {
+      if(text.trim(" ").length > 0){
+        await handleAddPost(text);
+        setText("");
+      }
+    } catch (error) {
+      console.error("Error while adding post", error);
+    }
+  };
+
   return (
     <>
       <div className="addpost-model">
@@ -38,11 +53,14 @@ const PostAddCard = () => {
           <textarea
             className="addpost-textarea"
             placeholder="What's on your mind?"
+            value={text}
+            name="text"
+            onChange={(e) => setText(e.target.value)}
           ></textarea>
         </div>
         <div className="postfooter">
           <div className="left">
-            <div className="postfooter-item">
+            <div className="postfooter-item"  onClick={handleOpen}>
               <button>
                 <VideocamOutlinedIcon sx={{color:"red"}} />
               </button>
@@ -54,14 +72,14 @@ const PostAddCard = () => {
               </button>
               <span>Photo</span>
             </div>
-            <div className="postfooter-item">
+            <div className="postfooter-item"  onClick={handleOpen}>
               <button>
                 <GifOutlinedIcon sx={{color:'orange',padding:'0 !important'}}/>
               </button>
               <span>Gif/Activity</span>
             </div>
           </div>
-          <div className="right">
+          <div className="right" onClick={()=>{handleSubmit()}}>
             <SendOutlinedIcon />
           </div>
         </div>

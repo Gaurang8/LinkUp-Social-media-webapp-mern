@@ -16,10 +16,25 @@ import Avatar from '@mui/material/Avatar';
 import { deepOrange } from '@mui/material/colors';
 import Post from "../components/Post";
 import {  authUser, handleAddPost, handleCommentPost, handleDeleteComment, handleDeletePost, handleDislikePost, handleFollow, handleLikePost, handleLogout, handleUnfollow } from "../functions/fetchapi";
-import Notifications from "../components/Notifications";
 import { MyContext } from "../MyContext";
 import { useParams } from "react-router-dom";
 import moment from "moment";
+import CommonForm from "../components/Forms/CommonForm";
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import CoverImgForm from "../components/Forms/CoverImgForm";
+import ProfileImgForm from "../components/Forms/ProfileImgForm";
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  borderRadius: '10px',
+};
 
 const Profile = () => {
 
@@ -30,6 +45,18 @@ const Profile = () => {
   const [selfUser, setSelfUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [coveropen, setCoverOpen] = React.useState(false);
+  const handleCoverOpen = () => setCoverOpen(true);
+  const handleCoverClose = () => setCoverOpen(false);
+
+  const [profileopen, setProfileOpen] = React.useState(false);
+  const handleProfileOpen = () => setProfileOpen(true);
+  const handleProfileClose = () => setProfileOpen(false);
 
   useEffect(() => {
 
@@ -90,15 +117,15 @@ const Profile = () => {
     <div className="main-profile-container">
       <div className="profile-theme-page">
         <div className="profile-cover">
-          <img src={defImg} alt="coverimage" />
-          <span>Edit Cover</span>
+          <img src={`data:image/*;base64,${userData?.coverImage}`} alt="coverimage" />
+          <span onClick={handleCoverOpen}>Edit Cover</span>
         </div>
       </div>
       <div className="profile-page-content">
         <div className="left">
           <div className="profile-left-card">
-            <div className="p-c-avtar">
-              <img></img>
+            <div className="p-c-avtar" onClick={handleProfileOpen}>
+              <img src={`data:image/*;base64,${userData?.profileImage}`} alt='' />
             </div>
             <div className="p-c-name">{userData?.name}</div>
             <div className="p-c-followers">
@@ -142,7 +169,7 @@ const Profile = () => {
               <span className="name">
                 Hi,i'm {userData?.name}
               </span>
-              <span className="p-edit-btn">
+              <span className="p-edit-btn" onClick={()=> handleOpen()}>
                 Edit Your Profile
               </span>
             </div>
@@ -195,6 +222,37 @@ const Profile = () => {
             })}
         </div>
       </div>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+         <CommonForm/>
+        </Box>
+      </Modal>
+      <Modal
+        open={coveropen}
+        onClose={handleCoverClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+         <CoverImgForm close={handleCoverClose}/>
+        </Box>
+      </Modal>
+      <Modal
+        open={profileopen}
+        onClose={handleProfileClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+         <ProfileImgForm close={handleProfileClose}/>
+        </Box>
+      </Modal>
     </div>
   );
 };

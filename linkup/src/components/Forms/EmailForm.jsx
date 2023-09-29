@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { MyContext } from '../../MyContext';
 
 const EmailForm = () => {
+
 
   const {user} = useContext(MyContext);
 
@@ -10,6 +11,15 @@ const EmailForm = () => {
   const [newUsername, setNewUsername] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if(user){
+      setNewEmail(user?.email);
+      setNewUsername(user?.username);
+    }
+  }
+  , [user]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -80,6 +80,12 @@
     flex-shrink: 0;
     margin: 0 auto;
 }
+.p-c-avtar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
 
 .p-c-name {
     font-size: 20px;

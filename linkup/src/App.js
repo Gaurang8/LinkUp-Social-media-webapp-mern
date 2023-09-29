@@ -14,6 +14,8 @@ import News from './pages/News';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Settings from './pages/Settings';
+import Trending from './pages/Trending';
+import CommonForm from './components/Forms/CommonForm';
 
 function App() {
 
@@ -71,7 +73,8 @@ function App() {
                   <Routes>
                     <Route path='/profile/:userId' element={<Profile />} />
                     <Route path='/home' element={<Home />} />
-                    <Route path='/settings' element={<Settings />} />
+                    <Route path='/settings' element={<><Settings /></>} />
+                    <Route path='/trending' element={<Trending />} />
                   </Routes>
                 </div>
               </div>

@@ -47,6 +47,16 @@ const Sidebar = ({ widthFull }) => {
             <span className="sidebar-item-text">Profile</span>
           </div>
         </Link>
+        <Link to="/trending" className="sidebar-item-link">
+          <div
+            className={`sidebar-item ${active === "trending" ? "active" : ""}`}
+          >
+            <span className="sidebar-item-icon">
+              <HomeRoundedIcon />
+            </span>
+            <span className="sidebar-item-text">Explore</span>
+          </div>
+        </Link>
         <Link to="/settings" className="sidebar-item-link">
           <div
             className={`sidebar-item ${active === "settings" ? "active" : ""}`}

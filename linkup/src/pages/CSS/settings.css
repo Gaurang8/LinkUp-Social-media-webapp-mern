@@ -4,3 +4,9 @@
     padding-block: 10px;
     box-sizing: border-box;
 }
+#setting-main{
+    background-color: white !important;
+    padding: 20px !important;
+    border-radius: 10px !important;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1) !important;
+}

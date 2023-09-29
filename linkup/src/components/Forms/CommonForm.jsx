@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
-import '../../pages/CSS/user.css';
+import React, { useState , useEffect ,useContext } from "react";
+import "../../pages/CSS/user.css";
+import { MyContext } from "../../MyContext";
 
 const CommonForm = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
-  const [language, setLanguage] = useState('');
-  const [dob, setDob] = useState('');
-  const [socialMediaLinks, setSocialMediaLinks] = useState('');
+  const { user } = useContext(MyContext);
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [language, setLanguage] = useState("");
+  const [dob, setDob] = useState("");
+  const [socialMediaLinks, setSocialMediaLinks] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      setName(user?.name);
+      setDescription(user?.description);
+      setLocation(user?.location);
+      setLanguage(user?.languageSpeak);
+      setDob(user?.dob);
+      setSocialMediaLinks(user?.socialMediaLinks);
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,23 +35,26 @@ const CommonForm = () => {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/update`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_ADDR}/update`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log('User profile updated successfully:', data);
+        console.log("User profile updated successfully:", data);
       } else {
-        console.error('Failed to update user profile');
+        console.error("Failed to update user profile");
       }
     } catch (error) {
-      console.error('An error occurred while updating user profile:', error);
+      console.error("An error occurred while updating user profile:", error);
     }
   };
 

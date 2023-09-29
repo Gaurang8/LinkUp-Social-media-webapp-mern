@@ -1,21 +1,16 @@
 import React, { useContext ,useState } from "react";
-import img from "../pagelogo.png";
+import img from "../../pagelogo.png";
 
-import "./css/addtopost.css";
-import { MyContext } from "../MyContext";
+import "../css/addtopost.css";
+import { MyContext } from "../../MyContext";
+import { addCoverImg } from "../../functions/fetchapi";
 
-import { handleAddPost } from "../functions/fetchapi";
 
-const AddPostImg = ({ Closebtn }) => {
+const CoverImgForm = ({ close }) => {
   const { user } = useContext(MyContext);
 
-  const [text, setText] = useState("");
   const [images, setImages] = useState([]);
   const [tempImg, setTempImg] = useState([img]);
-
-  const handleTextChange = (e) => {
-    setText(e.target.value);
-  };
 
   const handleImageChange = (e) => {
     const selectedImages = e.target.files;
@@ -47,12 +42,11 @@ const AddPostImg = ({ Closebtn }) => {
     });
   
     try {
-      await handleAddPost(text, imageData);
-      setText("");
+      await addCoverImg(imageData);
       setImages([]);
       setTempImg(img);
     } catch (error) {
-      console.error("Error while adding post", error);
+      console.error("Error while adding image", error);
     }
   };
   
@@ -61,22 +55,10 @@ const AddPostImg = ({ Closebtn }) => {
     <form onSubmit={handleSubmit} encType="multipart/form-data">
     <div className="addpost-card">
       <div className="addpost-heading">
-        <h3>Add Post</h3>
-        <button className="addpost-close-btn" onClick={Closebtn}>
+        <h3>Add Cover</h3>
+        <button className="addpost-close-btn" onClick={close}>
           X
         </button>
-      </div>
-      <div className="addpost-text-content">
-        <div className="addpost-user-icon">
-          <img src="https://picsum.photos/30/30" alt="user" />
-        </div>
-        <textarea
-          className="addpost-textarea"
-          placeholder="What's on your mind?"
-          value={text}
-          name="text"
-          onChange={handleTextChange}
-        ></textarea>
       </div>
       <div className="addpost-img-content">
         <label className="imageoriconclass" htmlFor="images">
@@ -94,11 +76,11 @@ const AddPostImg = ({ Closebtn }) => {
       <div className="addpost-btn-content">
         <button className="addpost-btn">cancel</button>
         <button className="addpost-btn" type="submit">
-          Post
+          Change
         </button>
       </div>
     </div>
     </form>
   );
 };
-export default AddPostImg;
+export default CoverImgForm;

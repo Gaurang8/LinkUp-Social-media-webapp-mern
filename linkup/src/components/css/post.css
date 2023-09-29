@@ -182,6 +182,8 @@
     padding: 7px 10px;
     box-sizing: border-box;
     align-items: center;
+        /* border-bottom: 1px dashed rgba(6,6,6,0.1); */
+
 }
 .post-comment-avtar{
     height: 30px;
@@ -195,9 +197,9 @@
     aspect-ratio: 1;
 }
 .post-comment-avtar .css-2s90m6-MuiAvatar-root{
-    height: 100%;
+    height: 100% !important;
     width: auto;
-    aspect-ratio: 1;
+    aspect-ratio: 1 !important;
 }
 .post-comment-section{
     width: 100%;
@@ -231,4 +233,62 @@
     width: 30px;
     color: darkslategray;
     transform: rotate3d(0, 1, 1, 324deg);
+}
+
+/* comment */
+.post-user-comments-list{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.post-user-comments-list-item
+{
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    padding-inline: 10px;
+    box-sizing: border-box;
+}
+.post-user-comments-list-item > span{
+    height: 30px;
+    flex-shrink: 0;
+    width: 30px;
+}
+.post-user-comments-list-item span img{
+    /* height: 100%; */
+    width: 100%;
+    fill: #000;
+    border-radius: 50%;
+}
+.post-user-comments-list-item span svg{
+    height: 100%;
+    width: 100%;
+    fill: #000;
+}
+.post-user-comments-list-item-text{
+    width: calc(100% - 30px);
+    flex-shrink: 1;
+    flex-grow: 1;
+    height: auto;
+    background-color: #f6f6f6;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #555;
+}
+.post-user-comments-list-item-text span{
+    color: #000;
+    font-weight: 600;
+    font-size: 16px;
+
+}
+.view-more-btn-comment
+{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 10px;
+    color: darkslategray;
+    font-weight: 600;
 }
