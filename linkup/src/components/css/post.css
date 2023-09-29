@@ -122,6 +122,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    border-bottom: 1px dashed rgba(6,6,6,0.1);
 }
 .footer-like-comment{
     width: calc(100% - 50px);
@@ -173,3 +174,61 @@
     fill: #000;
 }
 
+.post-comment-footer{
+    width: 100%;
+    display: flex;
+    height: 50px;
+    gap: 20px;
+    padding: 7px 10px;
+    box-sizing: border-box;
+    align-items: center;
+}
+.post-comment-avtar{
+    height: 30px;
+    aspect-ratio: 1;
+    width: auto;
+    box-sizing: border-box;
+}
+.post-comment-avtar svg{
+    height: 70%;
+    width: auto;
+    aspect-ratio: 1;
+}
+.post-comment-avtar .css-2s90m6-MuiAvatar-root{
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1;
+}
+.post-comment-section{
+    width: 100%;
+    background-color: rgb(245, 245, 245);
+    padding-inline: 10px 50px;
+    border-radius: 6px;
+    height: 35px;
+    position: relative;
+    
+}
+.post-comment-section input{
+    outline: none;
+    border: none;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+}
+.post-comment-section button{
+    position: absolute;
+    top: 50%;
+    right: 7px;
+    height: 30px;
+    width: 30px;
+    transform: translateY(-57%);
+    border: none;
+    background: transparent;
+
+}
+.post-comment-section button svg{
+    height: 30px;
+    width: 30px;
+    color: darkslategray;
+    transform: rotate3d(0, 1, 1, 324deg);
+}

@@ -13,6 +13,7 @@ import Profile from './pages/Profile';
 import News from './pages/News';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
+import Settings from './pages/Settings';
 
 function App() {
 
@@ -31,15 +32,10 @@ function App() {
         console.log("user is", userData);
         console.log("isAuth is", isAuth);
       }
-      else {
-        setUser(null);
-        setIsAuth(false);
-        console.log("user is", userData);
-        console.log("isAuth is", isAuth);
-      }
     }
     fetchUser();
-  }, []);
+  },[]);
+
 
   useEffect(() => {
     setInterval(() => {
@@ -50,6 +46,7 @@ function App() {
       setIsFull(true);
     }
     }
+
     , 1000);
   },[]);
 
@@ -66,15 +63,15 @@ function App() {
       >
         <BrowserRouter>
           {
-            isAuth ? (<>
+            user ? (<>
               <Navbar />
               <div className='main-content-app'>
                 <div className={`main-c-left ${isFull ? 'isFullclass' : ''}`}><Sidebar widthFull={`${isFull}`} /></div>
                 <div className={`main-c-right ${isFull ? 'bodyshrink' : ''}`}>
                   <Routes>
-                    <Route path='/' element={<Profile />} />
+                    <Route path='/profile/:userId' element={<Profile />} />
                     <Route path='/home' element={<Home />} />
-                    <Route path='/news' element={<News />} />
+                    <Route path='/settings' element={<Settings />} />
                   </Routes>
                 </div>
               </div>

@@ -101,6 +101,20 @@ const userSchema = mongoose.Schema({
     joinedDate: {
         type: Date,
         default: Date.now
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    dateOfBirth: {
+        type: Date,
+    },
+    profileImage: {
+        type: String 
+    },
+    coverImage: {
+        type: String
     }
 }, { timestamps: true });
 

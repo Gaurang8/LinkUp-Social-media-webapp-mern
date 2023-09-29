@@ -1,0 +1,62 @@
+.notification-main{
+    /* height: 100%; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    box-sizing: border-box;
+}
+.css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop{
+    background-color: rgba(0,0,0,0.3) !important;
+}
+.notification-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.notification-header span{
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.notification-body{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.notification-body-item{
+    width: 100%;
+    /* height: 50px; */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    box-sizing: border-box;
+    padding: 7px 15px;
+}
+.notification-body-item:hover{
+    background-color: rgba(0,0,0,0.1);
+}
+.notification-user-icon{
+    width: auto;
+    height: 100%;
+    aspect-ratio: 1;
+}
+.notification-user-icon img{
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+.notification-message{
+    font-size: 16px;
+    font-weight: 500;
+    
+}

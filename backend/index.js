@@ -22,8 +22,8 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
+app.use(bodyParser.json({ limit: 1024 * 1024 * 50, type: 'application/json' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: 1024 * 1024 * 50, parameterLimit: 500000, type: 'application/x-www-form-urlencoded' }));
 app.use(cookieParser());
 
 
@@ -88,7 +88,7 @@ const authenticateToken = (req, res, next) => {
 
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, password , description , location , accountType , languageSpeak , posts } = req.body;
+    const { name, email, password, description, location, accountType, languageSpeak, posts } = req.body;
     console.log(req.body);
     if (!(email && password && name)) {
       return res.status(400).send("All input is required");
@@ -115,7 +115,11 @@ app.post("/register", async (req, res) => {
       socialMediaLinks: [],
       posts: posts || [],
       notifications: [],
-      joinedDate: new Date()
+      joinedDate: new Date(),
+      username: `${name}${new Date().getMinutes()}${new Date().getSeconds()}` ,
+      dateOfBirth: null,
+      profileImage: "",
+      coverImage: "",
     });
 
     const token = jwt.sign(
@@ -184,8 +188,7 @@ app.post("/follow/:userId", authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
     const userToFollow = await User.findById(userId);
-    console.log(userId)
-    
+
     if (!userToFollow) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -210,7 +213,7 @@ app.post("/follow/:userId", authenticateToken, async (req, res) => {
 
 
     // only for notifications
-    const notificationMessage = `${currentUser.name} is now started following you.`;
+    const notificationMessage = ` is now started following you.`;
     const recipientUserId = userId;
 
     const recipient = await User.findById(recipientUserId);
@@ -484,6 +487,24 @@ app.delete("/deletecomment/:postId/:commentId", authenticateToken, async (req, r
   }
 });
 
+app.get("/user/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log(userId)
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while fetching the user by ID" });
+  }
+});
+
 app.get("/searchuser/:query", async (req, res) => {
   try {
     const { query } = req.params;
@@ -497,14 +518,16 @@ app.get("/searchuser/:query", async (req, res) => {
   }
 });
 
-app.patch("/update/:userId", authenticateToken, async (req, res) => {
+app.patch("/update", authenticateToken, async (req, res) => {
   try {
-    const { userId } = req.params;
-    const { name, description, location, languageSpeak, socialMediaLinks } = req.body;
+    const { name, description, location, languageSpeak, socialMediaLinks ,dob } = req.body;
 
-    if (req.user.user_id !== userId) {
-      return res.status(403).json({ message: "You are not authorized to update this user's profile" });
-    }
+    const userId = req.user.user_id;
+    console.log(userId)
+
+    // if (req.user.user_id !== userId) {
+    //   return res.status(403).json({ message: "You are not authorized to update this user's profile" });
+    // }
 
     const user = await User.findById(userId);
 
@@ -512,13 +535,15 @@ app.patch("/update/:userId", authenticateToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (name) { 
-      user.name = name; 
+    if (name) {
+      user.name = name;
     }
     if (description) user.description = description;
     if (location) user.location = location;
     if (languageSpeak) user.languageSpeak = languageSpeak;
+    if (dob) user.dateOfBirth = dob;
     if (socialMediaLinks) user.socialMediaLinks = socialMediaLinks;
+
 
     await user.save();
 
@@ -559,7 +584,7 @@ app.patch("/updateaccounttype/:userId", authenticateToken, async (req, res) => {
 app.patch("/changeuseremail/:userId", authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
-    const { newEmail, currentPassword } = req.body;
+    const { newEmail,newUsername, currentPassword } = req.body;
 
     if (req.user.user_id !== userId) {
       return res.status(403).json({ message: "You are not authorized to change this user's email" });
@@ -574,10 +599,20 @@ app.patch("/changeuseremail/:userId", authenticateToken, async (req, res) => {
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Incorrect password. Email change failed" });
+      return res.status(401).json({ message: "Incorrect password. change Failed" });
     }
 
+    const existingUserWithUsername = await User.findOne({ username: newUsername });
+
+
+    if (existingUserWithUsername && existingUserWithUsername._id.toString() !== userId) {
+      return res.status(400).json({ message: "Username already in use" });
+    }
+
+
     user.email = newEmail;
+
+    user.username = newUsername;
 
     await user.save();
 
@@ -593,6 +628,10 @@ app.patch("/changeuserpassword/:userId", authenticateToken, async (req, res) => 
     const { userId } = req.params;
     const { currentPassword, newPassword } = req.body;
 
+    console.log(req.body)
+    console.log(userId)
+    console.log(req.user.user_id)
+
     if (req.user.user_id !== userId) {
       return res.status(403).json({ message: "You are not authorized to change this user's password" });
     }
@@ -606,7 +645,7 @@ app.patch("/changeuserpassword/:userId", authenticateToken, async (req, res) => 
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Incorrect current password. Password change failed" });
+      return res.status(401).json({ message: "Incorrect current password" });
     }
 
     const newPasswordHash = await bcrypt.hash(newPassword, 10);
@@ -622,13 +661,13 @@ app.patch("/changeuserpassword/:userId", authenticateToken, async (req, res) => 
   }
 });
 
-app.get("/newsfeed/:offset/:limit",authenticateToken, async (req, res) => {
+app.get("/newsfeed/:offset/:limit", authenticateToken, async (req, res) => {
   try {
- 
-    const userId = req.user.user_id; 
+
+    const userId = req.user.user_id;
 
     const offset = parseInt(req.params.offset) || 0;
-    const limit = parseInt(req.params.limit) || 15; 
+    const limit = parseInt(req.params.limit) || 15;
 
     const user = await User.findById(userId);
     console.log(user)
@@ -638,8 +677,8 @@ app.get("/newsfeed/:offset/:limit",authenticateToken, async (req, res) => {
     }
 
     console.log(user.following)
-    const posts = await User.find({ _id : { $in: user.following } })
-      .select("posts") 
+    const posts = await User.find({ _id: { $in: user.following } })
+      .select("posts")
       .sort({ "posts.createdTime": -1 })
 
     console.log(posts)
@@ -648,7 +687,7 @@ app.get("/newsfeed/:offset/:limit",authenticateToken, async (req, res) => {
 
     const limitedNewsFeed = newsFeed.slice(offset, offset + limit);
 
-    res.json({ newsFeed : limitedNewsFeed });
+    res.json({ newsFeed: limitedNewsFeed });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while fetching the news feed" });
@@ -657,7 +696,7 @@ app.get("/newsfeed/:offset/:limit",authenticateToken, async (req, res) => {
 app.get("/popularposts", async (req, res) => {
   try {
     const timeFrameInDays = 7;
-    const postLimit = 15; 
+    const postLimit = 15;
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - timeFrameInDays);
@@ -675,7 +714,7 @@ app.get("/popularposts", async (req, res) => {
         $sort: { "posts.likes.length": -1 },
       },
       {
-        $limit: postLimit, 
+        $limit: postLimit,
       },
       {
         $group: {
@@ -689,7 +728,7 @@ app.get("/popularposts", async (req, res) => {
       return res.json({ popularPosts: [] });
     }
 
-    const trendingPosts = popularPosts.map((doc) => doc.posts).flat(); 
+    const trendingPosts = popularPosts.map((doc) => doc.posts).flat();
     res.json({ popularPosts: trendingPosts });
   } catch (error) {
     console.error(error);
@@ -711,7 +750,7 @@ app.get("/postlikes/:postId", async (req, res) => {
 
     const likedUsers = await User.find(
       { _id: { $in: likedUserIds } },
-      { name: 1, image: 1, description: 1 } 
+      { name: 1, image: 1, description: 1 }
     );
 
     res.json({ likedUsers });
@@ -738,7 +777,7 @@ app.get("/postcomments/:postId", async (req, res) => {
     const commentUsers = await User.find(
       { _id: { $in: commentUserIds } },
       { name: 1, image: 1, description: 1 }
-      )
+    )
 
     const formattedComments = comments.map((comment) => {
       const commentUser = commentUsers.find((user) => user._id.toString() === comment.userId);
@@ -755,7 +794,7 @@ app.get("/postcomments/:postId", async (req, res) => {
   }
 });
 
-app.get("/suggestedusers", authenticateToken ,async (req, res) => {
+app.get("/suggestedusers", authenticateToken, async (req, res) => {
   try {
     const userId = req.user.user_id;
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./CSS/profile.css";
 import defImg from "../default_cover.jpg";
 import IosShareIcon from "@mui/icons-material/IosShare";
@@ -15,16 +15,76 @@ import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
 import Avatar from '@mui/material/Avatar';
 import { deepOrange } from '@mui/material/colors';
 import Post from "../components/Post";
-import { handleAddPost, handleCommentPost, handleDeleteComment, handleDeletePost, handleDislikePost, handleLikePost, handleLogout } from "../functions/fetchapi";
+import {  authUser, handleAddPost, handleCommentPost, handleDeleteComment, handleDeletePost, handleDislikePost, handleFollow, handleLikePost, handleLogout, handleUnfollow } from "../functions/fetchapi";
 import Notifications from "../components/Notifications";
 import { MyContext } from "../MyContext";
+import { useParams } from "react-router-dom";
+import moment from "moment";
 
 const Profile = () => {
 
-  const { isAuth , user } = React.useContext(MyContext);
+  const { isAuth, user , setUser} = useContext(MyContext);
 
+  const { userId } = useParams();
 
-  
+  const [selfUser, setSelfUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+
+    if (isAuth && userId === user._id || !userId) {
+      setSelfUser(true);
+      setUserData(user);
+      console.log("user is", userData);
+    }
+    else {
+      setSelfUser(false);
+      setUserData(null);
+    }
+  }
+    , [isAuth, userId, user]);
+
+  useEffect(() => {
+    if (!selfUser){
+      console.log("user id is", userId);
+      findUserById(userId);
+    }
+  }, [userId , user , selfUser]);
+
+  const findUserById = async (userId) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_ADDR}/user/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.user);
+          setUserData(data.user);
+        });
+    } catch (error) {
+      console.log("Error while finding user", error);
+    }
+  };
+
+  useEffect(() => {
+
+    if (userData && user) {
+      if (user?.following?.includes(userData._id)) {
+        setIsFollowing(true);
+      }
+      else {
+        setIsFollowing(false);
+      }
+    }
+  }, [userData, user]);
 
   return (
     <div className="main-profile-container">
@@ -40,28 +100,39 @@ const Profile = () => {
             <div className="p-c-avtar">
               <img></img>
             </div>
-            <div className="p-c-name">{user?.name}</div>
+            <div className="p-c-name">{userData?.name}</div>
             <div className="p-c-followers">
-              <span>{user?.followers?.length} followers</span>
-              <span>{user?.following?.length} Followings</span>
+              <span>{userData?.followers?.length} followers</span>
+              <span>{userData?.following?.length} Followings</span>
             </div>
             <div className="p-c-message-more">
-              <span className="p-c-msg" >Message</span>
-              <span className="p-c-share" onClick={()=>{handleDeletePost("650df54a81248aaf72e9c362")}}>
+              {
+                isFollowing ? <span className="p-c-msg" onClick={ async ()=>{
+                  await handleUnfollow(userData._id);
+                  const newUserData = await authUser();
+                  setUser(newUserData);
+
+                }}> unfollow </span> : <span className="p-c-msg" onClick={async()=>{
+                  await handleFollow(userData._id);
+                  const newUserData = await authUser();
+                  setUser(newUserData);
+                }}> follow </span>
+              }
+              <span className="p-c-share" onClick={() => { handleDeletePost("650df54a81248aaf72e9c362") }}>
                 <IosShareIcon />
               </span>
-              <span className="p-c-more" onClick={()=>{handleLogout()}}>
+              <span className="p-c-more" onClick={() => { handleLogout() }}>
                 <MoreVertIcon />
               </span>
             </div>
             <div className="p-c-links" >
-              <TwitterIcon onClick={()=> {handleAddPost("lorem dfd fhed fdfeuf efefe" , "https://picsum.photos/50/50")}}/>
-              <FacebookIcon onClick={()=>{ handleLikePost("650df54a81248aaf72e9c362") } }/>
-              <InstagramIcon onClick={()=>{ handleCommentPost("650df54a81248aaf72e9c362","Gaurang is a good boy") }} />
+              <TwitterIcon onClick={() => { handleAddPost("lorem dfd fhed fdfeuf efefe", "https://picsum.photos/50/50") }} />
+              <FacebookIcon onClick={() => { handleLikePost("650df54a81248aaf72e9c362") }} />
+              <InstagramIcon onClick={() => { handleCommentPost("650df54a81248aaf72e9c362", "Gaurang is a good boy") }} />
             </div>
             <div className="p-c-created-date-and-report">
-              <span onClick={()=> {handleDislikePost("650df54a81248aaf72e9c362")}}>Joined Since Nov 2017 </span>
-              <span onClick={() => {handleDeleteComment("650df54a81248aaf72e9c362","650dce93a956ff9fcc32b14c")}}>Report This User</span>
+              <span onClick={() => { handleDislikePost("650df54a81248aaf72e9c362") }}>{`Joined Since ${moment(userData?.createdAt).format("MMM YYYY")} `}</span>
+              <span onClick={() => { handleDeleteComment("650df54a81248aaf72e9c362", "650dce93a956ff9fcc32b14c") }}>Report This User</span>
             </div>
           </div>
         </div>
@@ -69,26 +140,26 @@ const Profile = () => {
           <div className="p-p-disc-section">
             <div className="p-p-fullname">
               <span className="name">
-                Hi,i'm Gaurang Khambhaliya
+                Hi,i'm {userData?.name}
               </span>
               <span className="p-edit-btn">
                 Edit Your Profile
               </span>
             </div>
-            <div className="p-p-disc"> this is disc de erc dfefc dfefc efecdj fdhf dfdsufdhf fdfuh f fhifhaid ffd dfsdf dfdf fggjdighe fadhu aigt fdugfaifggtihd ugfad dfdfd fd fdf fejf ef </div>
+            <div className="p-p-disc"> {userData?.description} </div>
             <div className="p-p-more-details">
               <table>
                 <tr>
                   <td><HomeOutlinedIcon /> Lives In</td>
-                  <td>Ahmedabad , Gujrat</td>
+                  <td>{userData?.location}</td>
                 </tr>
                 <tr>
                   <td><PersonOutlineOutlinedIcon /> Account</td>
-                  <td>Verified Member</td>
+                  <td>{userData?.accountType}</td>
                 </tr>
                 <tr>
                   <td><InterpreterModeOutlinedIcon /> Speak</td>
-                  <td>Gujrati , Hindi</td>
+                  <td>{userData?.languageSpeak.join(',')}</td>
                 </tr>
               </table>
             </div>
@@ -118,10 +189,10 @@ const Profile = () => {
 
 
           {
-             user && user?.posts.map((post)=>{
+            userData && userData?.posts.map((post) => {
               return <Post key={post._id} Data={post} />
 
-          })}
+            })}
         </div>
       </div>
     </div>

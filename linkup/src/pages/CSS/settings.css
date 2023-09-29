@@ -1,0 +1,6 @@
+.settings-main-page{
+    height: calc(100vh - 90px);
+    overflow: auto;
+    padding-block: 10px;
+    box-sizing: border-box;
+}

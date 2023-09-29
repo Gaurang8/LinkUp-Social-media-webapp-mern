@@ -51,6 +51,8 @@
  .form-container {
     max-width: 400px;
     min-width: 300px;
+    margin: auto;
+    margin-block: 5px;
     background-color: #fff;
     padding: 32px 24px;
     font-size: 14px;

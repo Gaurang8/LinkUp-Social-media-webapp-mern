@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./css/suggesteduser.css";
 import { handleFollow } from "../functions/fetchapi";
+import { Link } from "react-router-dom";
 
 const SuggestedUser = () => {
   // /suggestedusers
@@ -31,6 +32,8 @@ const SuggestedUser = () => {
     };
     getSuggestedUsers();
   }, []);
+
+  
   return (
     <div className="suggested-user">
       <div className="suggested-u-header">
@@ -52,7 +55,7 @@ const SuggestedUser = () => {
                     />
                   </div>
                   <div className="suggested-u-body-items-name">
-                    <h3>{user.name}</h3>
+                    <Link to={`/profile/${user._id}`}><h3>{user.name}</h3></Link>
                     <p>user name</p>
                   </div>
                   <div className="suggested-u-body-items-btn">

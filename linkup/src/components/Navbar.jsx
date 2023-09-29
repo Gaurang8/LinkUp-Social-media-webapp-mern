@@ -1,19 +1,28 @@
-import { Avatar } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { Avatar, OutlinedInput } from "@mui/material";
+import React, { useState, useEffect, useContext } from "react";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 import "./css/navbar.css";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Notifications from "./Notifications";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { authUser, handleLogout } from "../functions/fetchapi";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { MyContext } from "../MyContext";
 
 const Navbar = () => {
-  // /user/:id
+  const { user, setUser } = useContext(MyContext);
 
   const [searchUserData, setSearchUserData] = useState([]);
 
   const [searchUser, setSearchUser] = useState("");
+  const [userModal, setUserModal] = useState(false);
 
-  const serachfun = (e) => {
-    setSearchUser(e.target.value);
-  };
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const fetchSearchData = async () => {
@@ -61,14 +70,49 @@ const Navbar = () => {
             />
           </div>
           <div className="navbar-user-links">
-            <span className="navbar-notification">
+            <span className="navbar-notification" onClick={() => handleOpen()}>
               <NotificationsNoneIcon />
             </span>
-            <span className="navbar-user-icon">
+            <span className="navbar-user-icon" onClick={()=> setUserModal(!userModal)}>
               <Avatar />
             </span>
           </div>
         </div>
+        {userModal && (
+          <div className="user-icon-modal">
+            <div className="profile-sidebar">
+              <div className="profile-s-icon"></div>
+              <div className="profile-s-name">
+                <span className="profile-s-name-text">Name</span>
+
+                <span className="profile-s-username-text">@user name</span>
+              </div>
+              <div></div>
+            </div>
+            <div className="user-icon-main">
+              <div className="user-icon-m-item">
+                <span className="user-icon-m-item-icon">
+                  <SettingsOutlinedIcon />
+                </span>
+                <span className="user-icon-m-item-text">My Account</span>
+              </div>
+
+              <div
+                className="user-icon-m-item"
+                onClick={async () => {
+                  await handleLogout();
+                  const newUser = await authUser();
+                  setUser(newUser);
+                }}
+              >
+                <span className="user-icon-m-item-icon">
+                  <LogoutIcon />
+                </span>
+                <span className="user-icon-m-item-text">Log out</span>
+              </div>
+            </div>
+          </div>
+        )}
         {searchUserData.length > 0 && (
           <div className="model-user-geted">
             {searchUserData.map((user) => {
@@ -84,6 +128,16 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="notification-modal-class">
+          <Notifications close={handleClose} />
+        </Box>
+      </Modal>
     </>
   );
 };
