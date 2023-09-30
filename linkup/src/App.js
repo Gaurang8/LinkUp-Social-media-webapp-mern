@@ -27,7 +27,7 @@ function App() {
   useEffect(() => {
     async function fetchUser() {
       const userData = await authUser();
-      if (userData !== user  ) {
+      if (user && JSON.stringify(user) !== JSON.stringify(userData)) {
         setUser(userData);
         setIsAuth(true);
         console.log("user is", userData);
