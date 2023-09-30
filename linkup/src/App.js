@@ -34,8 +34,11 @@ function App() {
 
       }
     }
-    fetchUser();
-  });
+    setInterval(() => {
+      fetchUser();
+    }
+      , 000);
+  },[]);
 
 
   useEffect(() => {
@@ -48,7 +51,7 @@ function App() {
     }
     }
 
-    , 1000);
+    , 3000);
   },[]);
 
 
