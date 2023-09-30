@@ -46,7 +46,6 @@ const Post = ({ Data }) => {
       : setIsPostLiked(false);
   }, [Data, user, postLikedUserDetails, postCommentedUserDetails]);
 
-  console.log(Data);
 
   const fetchPostLikeUser = async (postId) => {
     try {
@@ -64,7 +63,6 @@ const Post = ({ Data }) => {
       if (response.ok) {
         const data = await response.json();
         setPostLikedUserDetails(data.likedUsers);
-        console.log("postliked user", postLikedUserDetails);
       } else {
         console.log("postliked user fetch failed");
       }
@@ -89,7 +87,6 @@ const Post = ({ Data }) => {
       if (response.ok) {
         const data = await response.json();
         setPostCommentedUserDetails(data.comments);
-        console.log("postcommented user", postCommentedUserDetails);
       } else {
         console.log("postcommented user fetch failed");
       }
@@ -137,7 +134,7 @@ const Post = ({ Data }) => {
           {/* <img src="https://picsum.photos/200/300" alt="post-img" /> */}
           {Data.images &&
             Data.images.map((img) => {
-              return <img src={`data:image/*;base64,${img}`} alt="post-img" />;
+              return <img src={img} alt="post-img" />;
             })}
         </div>
       </div>

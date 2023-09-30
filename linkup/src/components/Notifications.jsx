@@ -11,7 +11,6 @@ const Notifications = ({close}) => {
   const [notifications, setNotifications] = useState(user?.notifications || []);
 
   useEffect(() => {
-    console.log("user is ", user?.notifications);
     setNotifications(user?.notifications || []);
   }, [user]);
 

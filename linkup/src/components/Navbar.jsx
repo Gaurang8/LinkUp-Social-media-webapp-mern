@@ -11,6 +11,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { authUser, handleLogout } from "../functions/fetchapi";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { MyContext } from "../MyContext";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const { user, setUser } = useContext(MyContext);
@@ -39,7 +40,6 @@ const Navbar = () => {
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
             setSearchUserData(data.users);
           });
       } catch (error) {
@@ -117,12 +117,12 @@ const Navbar = () => {
           <div className="model-user-geted">
             {searchUserData.map((user) => {
               return (
-                <div className="user-item-m-k">
+                <Link to={`/profile/${user._id}`} className="user-item-m-k">
                   <div className="n-m-user-image">
                     <img src="https://picsum.photos/30/30" alt="user" />
                   </div>
                   <div className="n-m-user-name">{user.name}</div>
-                </div>
+                </Link>
               );
             })}
           </div>

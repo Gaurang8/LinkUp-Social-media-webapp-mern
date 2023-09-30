@@ -16,6 +16,7 @@ import Navbar from './components/Navbar';
 import Settings from './pages/Settings';
 import Trending from './pages/Trending';
 import CommonForm from './components/Forms/CommonForm';
+import Group from './pages/Group';
 
 function App() {
 
@@ -26,17 +27,15 @@ function App() {
   useEffect(() => {
     async function fetchUser() {
       const userData = await authUser();
-      console.log(userData);
-      if (userData) {
+      if (userData !== user  ) {
         setUser(userData);
         setIsAuth(true);
-
         console.log("user is", userData);
-        console.log("isAuth is", isAuth);
+
       }
     }
     fetchUser();
-  },[]);
+  });
 
 
   useEffect(() => {
@@ -73,6 +72,7 @@ function App() {
                   <Routes>
                     <Route path='/profile/:userId' element={<Profile />} />
                     <Route path='/home' element={<Home />} />
+                    <Route path='/groups' element={<Group />} />
                     <Route path='/settings' element={<><Settings /></>} />
                     <Route path='/trending' element={<Trending />} />
                   </Routes>

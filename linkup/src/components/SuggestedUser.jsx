@@ -24,7 +24,6 @@ const SuggestedUser = () => {
           .then((res) => res.json())
           .then((data) => {
             setSuggestedUsers(data.suggestedUsers);
-            console.log("suggested user", data.suggestedUsers);
           });
       } catch (error) {
         console.log("Error while getting suggested users", error);

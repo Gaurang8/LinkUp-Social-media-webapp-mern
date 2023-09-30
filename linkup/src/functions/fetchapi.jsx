@@ -2,7 +2,6 @@
 
 const authUser = async () => {
 
-  console.log("auth checking");
   const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/auth`, {
     method: "GET",
     headers: {
@@ -14,7 +13,6 @@ const authUser = async () => {
   const result = await response.json();
 
   if (response.ok) {
-    console.log("user is ", result.user);
     let _result = result.user;
     return _result;
   } else {
@@ -68,7 +66,7 @@ const handleAddPost = async (text, images) => {
 
     if (response.ok) {
       console.log("post added successfully");
-      authUser();
+      // authUser();
     } else {
       console.error("post failed");
     }
@@ -93,7 +91,7 @@ const handleDeletePost = async (postId) => {
 
     if (response.ok) {
       console.log("post deleted successfully");
-      authUser();
+      // authUser();
     } else {
       console.error("post delete failed");
     }
@@ -166,7 +164,7 @@ const handleCommentPost = async (postId, comment) => {
 
     if (response.ok) {
       console.log("post commented successfully");
-      authUser();
+      // authUser();
     } else {
       console.error("post comment failed");
     }
@@ -190,7 +188,7 @@ const handleDeleteComment = async (postId, commentId) => {
 
     if (response.ok) {
       console.log("comment deleted successfully");
-      authUser();
+      // authUser();
     } else {
       console.error("comment delete failed");
     }
@@ -262,7 +260,6 @@ const addCoverImg = async ( images) => {
 
     if (response.ok) {
       console.log("post added successfully");
-      authUser();
     } else {
       console.error("post failed");
     }
@@ -271,7 +268,7 @@ const addCoverImg = async ( images) => {
   }
 };
 const addProfileImg = async ( images) => {
-  console.log(images);
+  console.log(images , 'this');
   try {
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_ADDR}/addprofileimg`,
@@ -287,7 +284,6 @@ const addProfileImg = async ( images) => {
 
     if (response.ok) {
       console.log("post added successfully");
-      authUser();
     } else {
       console.error("post failed");
     }

@@ -9,11 +9,6 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import InterpreterModeOutlinedIcon from '@mui/icons-material/InterpreterModeOutlined';
-import CameraAltOutlined from '@mui/icons-material/CameraAltOutlined';
-import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
-import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
-import Avatar from '@mui/material/Avatar';
-import { deepOrange } from '@mui/material/colors';
 import Post from "../components/Post";
 import {  authUser, handleAddPost, handleCommentPost, handleDeleteComment, handleDeletePost, handleDislikePost, handleFollow, handleLikePost, handleLogout, handleUnfollow } from "../functions/fetchapi";
 import { MyContext } from "../MyContext";
@@ -63,7 +58,7 @@ const Profile = () => {
     if (isAuth && userId === user._id || !userId) {
       setSelfUser(true);
       setUserData(user);
-      console.log("user is", userData);
+      // console.log("user is", userData);
     }
     else {
       setSelfUser(false);
@@ -74,7 +69,6 @@ const Profile = () => {
 
   useEffect(() => {
     if (!selfUser){
-      console.log("user id is", userId);
       findUserById(userId);
     }
   }, [userId , user , selfUser]);
@@ -93,7 +87,6 @@ const Profile = () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data.user);
           setUserData(data.user);
         });
     } catch (error) {
@@ -117,7 +110,7 @@ const Profile = () => {
     <div className="main-profile-container">
       <div className="profile-theme-page">
         <div className="profile-cover">
-          <img src={`data:image/*;base64,${userData?.coverImage}`} alt="coverimage" />
+          <img src={userData?.coverImage} alt="coverimage" />
           <span onClick={handleCoverOpen}>Edit Cover</span>
         </div>
       </div>
@@ -125,7 +118,7 @@ const Profile = () => {
         <div className="left">
           <div className="profile-left-card">
             <div className="p-c-avtar" onClick={handleProfileOpen}>
-              <img src={`data:image/*;base64,${userData?.profileImage}`} alt='' />
+              <img src={userData?.profileImage} alt='' />
             </div>
             <div className="p-c-name">{userData?.name}</div>
             <div className="p-c-followers">
@@ -192,7 +185,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="add-post-from-profile-page">
+          {/* <div className="add-post-from-profile-page">
             <div className="post-content">
               <div className="add-post-user-avtar">
                 <Avatar
@@ -211,7 +204,8 @@ const Profile = () => {
               <span><VideoCallOutlinedIcon /></span>
               <span><GifBoxOutlinedIcon /></span>
             </div>
-          </div>
+          </div> */}
+          <handleAddPost/>
 
 
 

@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const User = require("./model/datamodal");
+const Group = require("./model/groupmodal");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
@@ -70,7 +71,6 @@ mongoose
 
 const authenticateToken = (req, res, next) => {
   const token = req.cookies.token;
-  console.log("token is", token);
 
   if (token === null) {
     return res.status(401).json({ message: "Missing token" });
@@ -285,7 +285,7 @@ app.post("/addcoverimg", authenticateToken, async (req, res) => {
   try {
     const { images } = req.body;
     const userId = req.user.user_id;
-    console.log(images[0])
+    console.log(images)
 
     const user = await User.findById(userId);
 
@@ -294,7 +294,7 @@ app.post("/addcoverimg", authenticateToken, async (req, res) => {
     }
 
 
-    user.coverImage = images[0]
+    user.coverImage = images
     await user.save();
 
     res.status(201).json({ message: "Cover image added successfully" });
@@ -307,7 +307,7 @@ app.post("/addprofileimg", authenticateToken, async (req, res) => {
   try {
     const { images } = req.body;
     const userId = req.user.user_id;
-    console.log(images[0])
+    console.log(images)
 
     const user = await User.findById(userId);
 
@@ -316,7 +316,7 @@ app.post("/addprofileimg", authenticateToken, async (req, res) => {
     }
 
 
-    user.profileImage = images[0]
+    user.profileImage = images
     await user.save();
 
     res.status(201).json({ message: "profile image added successfully" });
@@ -486,7 +486,23 @@ app.patch("/commentpost/:postId", authenticateToken, async (req, res) => {
     };
 
     post.comments.push(newComment);
+    
+
+    const notificationMessage = ` is Commented on Your Post.`;
+    const recipientUserId = postUser._id.toString();
+
+    if (postUser) {
+      const notification = {
+        message: notificationMessage,
+        senderId: user._id.toString(),
+        senderName: user.name,
+        recipient: recipientUserId,
+        timestamp: new Date(),
+      };
+      postUser.notifications.push(notification);
+    }
     await postUser.save();
+
 
     res.status(200).json({ message: "Comment added successfully", comment: newComment });
   } catch (err) {
@@ -857,5 +873,25 @@ app.get("/suggestedusers", authenticateToken, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while fetching suggested users" });
+  }
+});
+
+app.get('/api/groups', async (req, res) => {
+  try {
+    const groups = await Group.find(); 
+    res.json(groups);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});app.post('/api/groups', async (req, res) => {
+  try {
+    const { groupName, description, image } = req.body;
+    const group = new Group({ groupName, description, image });
+    const savedGroup = await group.save();
+    res.json(savedGroup);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext , useEffect } from 'react'
 
 import { MyContext } from '../MyContext';
 import './CSS/home.css';
@@ -12,6 +12,22 @@ const Trending = () => {
   const { setIsAuth, setUser } = useContext(MyContext);
 
   const [posts, setPosts] = React.useState([]);
+  const [smallWindow, setSmallWindow] = React.useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 925) {
+        setSmallWindow(true);
+      } else {
+        setSmallWindow(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
 
   React.useEffect(() => {
     const fetchPosts = async () => {
@@ -27,8 +43,6 @@ const Trending = () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          console.log(data);
           setPosts(data.popularPosts);
         })
         .catch((err) => console.log(err));
@@ -45,8 +59,11 @@ const Trending = () => {
       ) : (
         <>
           
-          {posts && posts.map((post) => {
-            return <Post key={post._id} Data={post} />;
+          {posts && posts.map((post , index) => {
+            return (<><Post key={post._id} Data={post} />
+            {index === 2 && smallWindow && (<div style={{margin:'auto',maxWidth:'95%'}}><SuggestedUser /></div>)}
+            </>)
+
           })}
         </>
       )}
