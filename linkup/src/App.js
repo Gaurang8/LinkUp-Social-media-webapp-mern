@@ -37,7 +37,7 @@ function App() {
     setInterval(() => {
       fetchUser();
     }
-      , 000);
+      , 3000);
   },[]);
 
 
