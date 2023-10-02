@@ -1,7 +1,8 @@
 
 
-const authUser = async () => {
+const authUser = async (user) => {
 
+  console.log("authenticating user" , user);
   const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/auth`, {
     method: "GET",
     headers: {
@@ -13,7 +14,16 @@ const authUser = async () => {
   const result = await response.json();
 
   if (response.ok) {
+
     let _result = result.user;
+    
+    if (JSON.stringify(user) === JSON.stringify(_result)) {
+      console.log("user same string");
+      return false
+    }
+    else {
+      return _result;
+    }
     return _result;
   } else {
     console.log("error while feaching user");

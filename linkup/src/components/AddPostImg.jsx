@@ -7,7 +7,7 @@ import { MyContext } from "../MyContext";
 import { handleAddPost } from "../functions/fetchapi";
 
 const AddPostImg = ({ Closebtn }) => {
-  const { user } = useContext(MyContext);
+  const { user , fetchUser } = useContext(MyContext);
 
   const [text, setText] = useState("");
   const [images, setImages] = useState(null);
@@ -62,6 +62,7 @@ const AddPostImg = ({ Closebtn }) => {
         setText("");
         setImages(null);
         setTempImg(img);
+        fetchUser();
       }
     } catch (error) {
       console.error("Error while adding post", error);

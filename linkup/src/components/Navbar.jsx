@@ -60,7 +60,7 @@ const Navbar = () => {
       <div className="navbar-main-parent">
         <div className="navbar-main">
           <div className="navbar-logo">
-            <span>Link Up</span>
+           <Link to='/'><span>Link Up</span></Link>
           </div>
           <div className="navbar-search">
             <input

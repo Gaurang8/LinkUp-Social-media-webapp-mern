@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState , useContext} from "react";
 import "./css/addtopost.css";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import AddPostImg from "./AddPostImg";
 import { handleAddPost } from "../functions/fetchapi";
+import { MyContext } from "../MyContext";
 
 const style = {
     position: 'absolute',
@@ -20,6 +21,8 @@ const style = {
   };
 
 const PostAddCard = () => {
+
+  const {fetchUser} = useContext(MyContext);
 
     const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -32,6 +35,7 @@ const PostAddCard = () => {
     try {
       if(text.trim(" ").length > 0){
         await handleAddPost(text);
+        await fetchUser();
         setText("");
       }
     } catch (error) {

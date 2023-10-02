@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import "./css/suggesteduser.css";
 import { handleFollow } from "../functions/fetchapi";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { MyContext } from "../MyContext";
 
 const SuggestedUser = () => {
+
+  const {fetchUser} = useContext(MyContext);
+
   // /suggestedusers
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [viewAll, setViewAll] = useState(false);
+
 
   useEffect(() => {
     const getSuggestedUsers = async () => {
@@ -59,8 +65,9 @@ const SuggestedUser = () => {
                   </div>
                   <div className="suggested-u-body-items-btn">
                     <button
-                      onClick={() => {
-                        handleFollow(user._id);
+                      onClick={async () => {
+                       await  handleFollow(user._id);
+                       await fetchUser();
                       }}
                     >
                       follow
@@ -84,8 +91,9 @@ const SuggestedUser = () => {
                   </div>
                   <div className="suggested-u-body-items-btn">
                     <button
-                      onClick={() => {
-                        handleFollow(user._id);
+                      onClick={async () => {
+                        await handleFollow(user._id);
+                        await fetchUser();
                       }}
                     >
                       follow

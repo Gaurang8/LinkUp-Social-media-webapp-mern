@@ -58,7 +58,6 @@ const Profile = () => {
     if (isAuth && userId === user._id || !userId) {
       setSelfUser(true);
       setUserData(user);
-      // console.log("user is", userData);
     }
     else {
       setSelfUser(false);

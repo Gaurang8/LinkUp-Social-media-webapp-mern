@@ -35,8 +35,8 @@ const Sidebar = ({ widthFull }) => {
         </div>
       </div>
       <div className="sidebar-main">
-        <Link to="/home" className="sidebar-item-link">
-          <div className={`sidebar-item ${active === "home" ? "active" : ""}`}>
+        <Link to="/" className="sidebar-item-link">
+          <div className={`sidebar-item ${active === "" ? "active" : ""}`}>
             <span className="sidebar-item-icon">
               <HomeRoundedIcon />
             </span>
