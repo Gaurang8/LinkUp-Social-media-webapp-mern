@@ -34,8 +34,6 @@ const Post = ({ Data }) => {
   const handlePostCommentSubmit = async (postId) => {
     if (postComment.trim(" ").length > 0) {
       const data = await handleCommentPost(postId, postComment);
-      // const newUser = authUser();
-      // setUser(newUser);
       setPostComment("");
     }
   };

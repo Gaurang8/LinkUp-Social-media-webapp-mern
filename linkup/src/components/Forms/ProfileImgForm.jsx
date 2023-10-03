@@ -38,14 +38,12 @@ const ProfileImgForm = ({ close }) => {
         if (data.secure_url !== "") {
           console.log(data.secure_url + " uploaded");
           try {
-            if (data.secure_url !== "") {
-              console.log(data.secure_url);
               await addProfileImg(data.secure_url);
               setImages([]);
               setTempImg(img);
               console.log("post added successfully");
             }
-          } catch (error) {
+           catch (error) {
             console.error("Error while adding image", error);
           }
         }
