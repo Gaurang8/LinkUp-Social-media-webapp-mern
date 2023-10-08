@@ -8,7 +8,7 @@ const Group = () => {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const response = await fetch(  `${process.env.REACT_APP_BACKEND_ADDR}/api/groups`); 
+        const response = await fetch(  `${process.env.REACT_APP_BACKEND_ADDR}/group/groups`); 
         if (response.ok) {
           const data = await response.json();
           setGroups(data);

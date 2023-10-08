@@ -3,7 +3,7 @@
 const authUser = async (user) => {
 
   console.log("authenticating user" , user);
-  const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/auth`, {
+  const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/auth/auth`, {
     method: "GET",
     headers: {
       "content-type": "application/json",
@@ -35,7 +35,7 @@ const handleLogout = async () => {
   console.log("logout");
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/logout`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/auth/logout`,
       {
         method: "GET",
         headers: {
@@ -63,7 +63,7 @@ const handleAddPost = async (text, images) => {
   console.log(images);
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/addnewpost`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/post/addnewpost`,
       {
         method: "POST",
         headers: {
@@ -89,7 +89,7 @@ const handleAddPost = async (text, images) => {
 const handleDeletePost = async (postId) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/deletepost/${postId}`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/post/deletepost/${postId}`,
       {
         method: "DELETE",
         headers: {
@@ -113,7 +113,7 @@ const handleDeletePost = async (postId) => {
 const handleLikePost = async (postId) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/likepost/${postId}`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/post/likepost/${postId}`,
       {
         method: "PATCH",
         headers: {
@@ -137,7 +137,7 @@ const handleLikePost = async (postId) => {
 const handleDislikePost = async (postId) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/dislikepost/${postId}`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/post/dislikepost/${postId}`,
       {
         method: "PATCH",
         headers: {
@@ -161,7 +161,7 @@ const handleDislikePost = async (postId) => {
 const handleCommentPost = async (postId, comment) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/commentpost/${postId}`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/post/commentpost/${postId}`,
       {
         method: "PATCH",
         headers: {
@@ -186,7 +186,7 @@ const handleCommentPost = async (postId, comment) => {
 const handleDeleteComment = async (postId, commentId) => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/deletecomment/${postId}/${commentId}`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/post/deletecomment/${postId}/${commentId}`,
       {
         method: "DELETE",
         headers: {
@@ -211,7 +211,7 @@ const handleFollow = async (followId) => {
   console.log(followId);
   try {
     const res = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/follow/${followId}`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/user/follow/${followId}`,
       {
         method: "POST",
         headers: {
@@ -233,7 +233,7 @@ const handleUnfollow = async (userId) => {
 
   try {
 
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/unfollow/${userId}`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/user/unfollow/${userId}`, {
 
       method: "POST",
       headers: {
@@ -257,7 +257,7 @@ const addCoverImg = async ( images) => {
   console.log(images);
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/addcoverimg`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/account/addcoverimg`,
       {
         method: "POST",
         headers: {
@@ -281,7 +281,7 @@ const addProfileImg = async ( images) => {
   console.log(images , 'this');
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND_ADDR}/addprofileimg`,
+      `${process.env.REACT_APP_BACKEND_ADDR}/account/addprofileimg`,
       {
         method: "POST",
         headers: {

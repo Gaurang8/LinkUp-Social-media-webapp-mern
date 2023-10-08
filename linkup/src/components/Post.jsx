@@ -48,7 +48,7 @@ const Post = ({ Data }) => {
   const fetchPostLikeUser = async (postId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_ADDR}/postlikes/${postId}`,
+        `${process.env.REACT_APP_BACKEND_ADDR}/post/postlikes/${postId}`,
         {
           method: "GET",
           headers: {
@@ -72,7 +72,7 @@ const Post = ({ Data }) => {
   const fetchPostCommentUser = async (postId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_ADDR}/postcomments/${postId}`,
+        `${process.env.REACT_APP_BACKEND_ADDR}/post/postcomments/${postId}`,
         {
           method: "GET",
           headers: {

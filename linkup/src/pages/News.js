@@ -31,7 +31,7 @@ const News = () => {
   React.useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_ADDR}/newsfeed/0/30`,
+        `${process.env.REACT_APP_BACKEND_ADDR}/post/newsfeed/0/30`,
         {
           method: "GET",
           headers: {

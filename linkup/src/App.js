@@ -96,7 +96,7 @@ function App() {
               <Navbar />
               <Snackbar open={open} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
-                  contact us at insta " _gaurang.patel_ "
+                  contact me at insta " _gaurang.patel_ "
                 </Alert>
               </Snackbar>
               <div className='main-content-app'>

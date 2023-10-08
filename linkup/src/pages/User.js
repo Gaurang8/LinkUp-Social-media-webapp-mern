@@ -20,7 +20,7 @@ function User() {
     console.log(process.env.REACT_APP_BACKEND_ADDR);
     const newUser = { name, email, password };
 
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/register`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/auth/register`, {
       method: "POST",
       body: JSON.stringify(newUser),
       headers: {
@@ -52,7 +52,7 @@ function User() {
 
     const newUser = { email, password };
 
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/login`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/auth/login`, {
       method: "POST",
       body: JSON.stringify(newUser),
       headers: {

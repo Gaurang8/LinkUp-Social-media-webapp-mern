@@ -36,7 +36,7 @@ const CommonForm = ({close}) => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_ADDR}/update`,
+        `${process.env.REACT_APP_BACKEND_ADDR}/account/update`,
         {
           method: "PATCH",
           headers: {

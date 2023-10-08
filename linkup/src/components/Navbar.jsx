@@ -29,7 +29,7 @@ const Navbar = () => {
     const fetchSearchData = async () => {
       try {
         const res = await fetch(
-          `${process.env.REACT_APP_BACKEND_ADDR}/searchuser/${searchUser}`,
+          `${process.env.REACT_APP_BACKEND_ADDR}/user/searchuser/${searchUser}`,
           {
             method: "GET",
             headers: {

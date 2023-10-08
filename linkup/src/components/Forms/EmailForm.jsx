@@ -31,7 +31,7 @@ const EmailForm = () => {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/changeuseremail/${user?._id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/account/changeuseremail/${user?._id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

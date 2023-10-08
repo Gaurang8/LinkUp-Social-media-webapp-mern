@@ -75,7 +75,7 @@ const Profile = () => {
   const findUserById = async (userId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_ADDR}/user/${userId}`,
+        `${process.env.REACT_APP_BACKEND_ADDR}/user/user/${userId}`,
         {
           method: "GET",
           headers: {

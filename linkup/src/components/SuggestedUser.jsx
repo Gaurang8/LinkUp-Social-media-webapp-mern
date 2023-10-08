@@ -18,7 +18,7 @@ const SuggestedUser = () => {
     const getSuggestedUsers = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_ADDR}/suggestedusers`,
+          `${process.env.REACT_APP_BACKEND_ADDR}/user/suggestedusers`,
           {
             method: "GET",
             headers: {

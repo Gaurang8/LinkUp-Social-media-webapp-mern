@@ -32,7 +32,7 @@ const Trending = () => {
   React.useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_ADDR}/popularposts`,
+        `${process.env.REACT_APP_BACKEND_ADDR}/post/popularposts`,
         {
           method: "GET",
           headers: {
