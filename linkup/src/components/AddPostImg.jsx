@@ -40,33 +40,29 @@ const AddPostImg = ({ Closebtn }) => {
       body: formData,
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then( async (data) => {
         if (data.secure_url !== "") {
-          const uploadedFileUrl = data.secure_url;
-          setUploadedFileUrl(uploadedFileUrl);
           console.log(uploadedFileUrl + " uploaded");
+          try {
+            if (!text && !images) {
+              return;
+            }
+
+              await handleAddPost(text, data.secure_url);
+              setText("");
+              setImages(null);
+              setTempImg(img);
+              console.log("post added successfully");
+              fetchUser();
+            }
+           catch (error) {
+            console.error("Error while adding post", error);
+          }
         }
-      }).then(() => {
-        console.log("uploadedFileUrl: ", uploadedFileUrl);
       })
       .catch((err) => console.error(err, "error while uploading"));
 
 
-    try {
-      if (!text && !images) {
-        return;
-      }
-      if (uploadedFileUrl) {
-        console.log("image uploaded");
-        await handleAddPost(text, uploadedFileUrl);
-        setText("");
-        setImages(null);
-        setTempImg(img);
-        fetchUser();
-      }
-    } catch (error) {
-      console.error("Error while adding post", error);
-    }
   };
 
   return (

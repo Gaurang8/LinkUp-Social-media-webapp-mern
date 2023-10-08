@@ -1,7 +1,7 @@
 const express = require('express');
 const { authenticateToken } = require('../middlewares/authenticate');
 const { AddNewPost, DeletePost, LikePost, DisLikePost, CommentPost, DeleteCommentPost, GetPostLikes, GetPostComments, GetPopularPost, GetNewsfeedPost } = require('../controllers/postcontrollers');
-const { route } = require('..');
+const { route } = require('../app');
 const router = express.Router();
 
 router.post('/addnewpost', authenticateToken, AddNewPost);

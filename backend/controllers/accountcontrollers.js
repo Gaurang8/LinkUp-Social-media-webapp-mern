@@ -1,4 +1,4 @@
-const Group = require("../model/groupmodal");
+const User  = require("../model/datamodal");
 
 const UpdateAccountDetails = async (req, res) => {
   try {
