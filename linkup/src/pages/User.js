@@ -48,9 +48,14 @@ function User() {
     }
   };
   const handleSubmitLogin = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
 
     const newUser = { email, password };
+
+    if (email === "" || password === "") {
+      setError("Enter Correct Input");
+      return;
+    }
 
     const response = await fetch(`${process.env.REACT_APP_BACKEND_ADDR}/auth/login`, {
       method: "POST",
@@ -145,6 +150,18 @@ function User() {
                     />
                   </div>
                   <button class="form-submit-btn" type="submit" > Login </button>
+                  <button class="form-submit-btn" onClick={ async (e)=>{
+                    setEmail("gaurang8102003@gmail.com")
+                    setPassword("Gaurang")
+                    await handleSubmitLogin()
+                  }} 
+                  style={{
+                    backgroundColor: "white",
+                    color: "black",
+                    border: "1px solid black",
+                    boxShadow: "none",
+
+                  }} > Login as a Gaust </button>
                 </form>
 
                 <p class="signup-link">
