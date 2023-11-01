@@ -24,7 +24,7 @@ import MuiAlert from '@mui/material/Alert';
 function App() {
 
   const [isAuth, setIsAuth] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [isFull, setIsFull] = useState(false);
 
 
